@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreelanceKit — Negotiation Coach</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FDF6EC;
+    --warm-white: #FFFBF4;
+    --sand: #F0E6D3;
+    --border: #e0d4c0;
+    --amber: #E8A045;
+    --amber-dk: #C4832A;
+    --amber-pale: #FBE9C3;
+    --forest: #1B2D4F;
+    --forest-mid: #2A4170;
+    --forest-light: #5A7A99;
+    --rust: #B85C38;
+    --muted: #6B7A99;
+    --light-gray: #E8EDE9;
+    --green: #3A7D5C;
+    --green-light: #EDF7F2;
+    --red: #D64C3F;
+    --shadow: rgba(27,45,79,0.10);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--cream);
+    color: var(--forest);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--forest);
+    padding: 24px 20px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before { content:''; position:absolute; top:-40px; right:-40px; width:160px; height:160px; border-radius:50%; background:rgba(232,160,69,0.12); }
+  .header::after  { content:''; position:absolute; bottom:-30px; left:-20px; width:100px; height:100px; border-radius:50%; background:rgba(232,160,69,0.08); }
+
+  .kit-brand { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:14px; position:relative; }
+  .kit-logo { width:26px; height:26px; background:var(--amber); border-radius:7px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .kit-logo svg { width:14px; height:14px; fill:var(--forest); }
+  .kit-name { font-family:'Plus Jakarta Sans',sans-serif; font-size:12px; font-weight:700; color:rgba(253,246,236,0.7); letter-spacing:0.08em; text-transform:uppercase; }
+  .kit-divider { width:1px; height:13px; background:rgba(253,246,236,0.25); }
+  .kit-tool { font-family:'Plus Jakarta Sans',sans-serif; font-size:12px; font-weight:500; color:rgba(253,246,236,0.55); }
+
+  .header h1 { font-family:'Fraunces',serif; font-size:28px; font-weight:900; color:#fff; line-height:1.2; margin-bottom:8px; position:relative; }
+  .header h1 span { color:var(--amber); }
+  .header p { color:rgba(255,255,255,0.65); font-size:14px; max-width:320px; margin:0 auto; font-weight:400; position:relative; }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap { background:var(--forest); padding:0 20px 16px; }
+  .progress-track { background:rgba(255,255,255,0.15); border-radius:4px; height:5px; overflow:hidden; }
+  .progress-fill { height:100%; background:var(--amber); border-radius:4px; transition:width 0.5s ease; }
+  .progress-label { display:flex; justify-content:space-between; color:rgba(255,255,255,0.5); font-size:11px; margin-top:6px; font-family:'Plus Jakarta Sans',sans-serif; }
+
+  /* ── CONTAINER ── */
+  .container { max-width:480px; margin:0 auto; padding:20px 16px 80px; }
+
+  /* ── SCREENS ── */
+  .screen { display:none; }
+  .screen.active { display:block; animation:fadeUp 0.35s ease; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);} }
+
+  /* ── SECTION HEADER ── */
+  .section-label { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+  .section-num { width:28px; height:28px; border-radius:50%; background:var(--forest); color:#fff; font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:'Plus Jakarta Sans',sans-serif; }
+  .section-title { font-family:'Fraunces',serif; font-size:20px; font-weight:700; color:var(--forest); }
+  .section-sub { font-size:13px; color:var(--muted); margin-bottom:20px; padding-left:38px; font-weight:400; }
+
+  /* ── CARD ── */
+  .card { background:#fff; border-radius:var(--radius); padding:20px; margin-bottom:14px; box-shadow:0 2px 12px var(--shadow); border:1.5px solid var(--border); }
+
+  /* ── INPUTS ── */
+  label { display:block; font-size:13px; font-weight:600; color:var(--forest); margin-bottom:6px; font-family:'Plus Jakarta Sans',sans-serif; }
+  .input-hint { font-size:11px; font-weight:400; color:var(--muted); margin-left:4px; }
+  input[type="text"], input[type="number"], textarea, select {
+    width:100%; padding:13px 15px;
+    border:2px solid var(--light-gray); border-radius:var(--radius-sm);
+    font-family:'Plus Jakarta Sans',sans-serif; font-size:15px;
+    color:var(--forest); background:var(--warm-white);
+    transition:border-color 0.2s; outline:none;
+    margin-bottom:14px; -webkit-appearance:none;
+  }
+  input:focus, textarea:focus, select:focus { border-color:var(--amber); background:#fff; }
+  input[type="number"] { -moz-appearance:textfield; }
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button { -webkit-appearance:none; }
+  textarea { min-height:90px; resize:vertical; }
+
+  /* ── DOLLAR PREFIX ── */
+  .input-prefix-wrap { position:relative; margin-bottom:14px; }
+  .input-prefix-wrap input { padding-left:32px; margin-bottom:0; }
+  .input-prefix { position:absolute; left:13px; top:50%; transform:translateY(-50%); color:var(--muted); font-weight:500; font-size:15px; pointer-events:none; }
+
+  /* ── RADIO CHIPS ── */
+  .chip-group { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+  .chip-group input[type="radio"] { display:none; }
+  .chip-group label { display:inline-block; padding:9px 16px; border-radius:50px; border:2px solid var(--light-gray); font-size:13px; font-weight:500; color:var(--muted); cursor:pointer; transition:all 0.2s; margin-bottom:0; white-space:nowrap; font-family:'Plus Jakarta Sans',sans-serif; }
+  .chip-group input[type="radio"]:checked + label { border-color:var(--forest); background:var(--forest); color:#fff; }
+
+  /* ── SLIDER ── */
+  .slider-wrap { margin-bottom:14px; }
+  .slider-val { font-family:'Fraunces',serif; font-size:22px; font-weight:700; color:var(--forest); margin-bottom:6px; }
+  input[type="range"] { width:100%; -webkit-appearance:none; height:6px; border-radius:4px; background:var(--light-gray); outline:none; margin:0; border:none; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance:none; width:24px; height:24px; border-radius:50%; background:var(--forest); cursor:pointer; border:3px solid #fff; box-shadow:0 2px 8px rgba(27,45,79,0.25); }
+  .slider-labels { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-top:4px; font-family:'Plus Jakarta Sans',sans-serif; }
+
+  /* ── BUTTONS ── */
+  .btn { display:block; width:100%; padding:16px; border-radius:50px; border:none; font-family:'Plus Jakarta Sans',sans-serif; font-size:16px; font-weight:700; cursor:pointer; transition:all 0.2s; text-align:center; margin-top:6px; }
+  .btn-primary { background:var(--forest); color:#fff; box-shadow:0 4px 16px rgba(27,45,79,0.2); }
+  .btn-primary:active { transform:scale(0.98); }
+  .btn-secondary { background:transparent; color:var(--forest); border:2px solid var(--forest); margin-top:10px; }
+  .btn-gold { background:var(--amber); color:var(--forest); box-shadow:0 4px 18px rgba(232,160,69,0.3); }
+
+  /* ── TIP BOX ── */
+  .tip-box { background:var(--amber-pale); border-left:4px solid var(--amber); border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:14px; font-size:13px; color:var(--forest); line-height:1.6; font-family:'Plus Jakarta Sans',sans-serif; }
+  .tip-box strong { color:var(--amber-dk); display:block; margin-bottom:4px; font-size:12px; text-transform:uppercase; letter-spacing:0.8px; }
+
+  /* ── WELCOME SCREEN ── */
+  .welcome-hero { text-align:center; padding:30px 10px 10px; }
+  .welcome-icon { font-size:64px; margin-bottom:16px; display:block; animation:float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);} }
+  .welcome-hero h2 { font-family:'Fraunces',serif; font-size:26px; font-weight:900; color:var(--forest); margin-bottom:12px; line-height:1.25; }
+  .welcome-hero p { font-size:15px; color:var(--muted); line-height:1.7; margin-bottom:6px; }
+  .steps-list { background:#fff; border-radius:var(--radius); padding:20px; margin:20px 0; text-align:left; box-shadow:0 2px 12px var(--shadow); border:1.5px solid var(--border); }
+  .step-item { display:flex; align-items:flex-start; gap:12px; padding:10px 0; border-bottom:1px solid var(--light-gray); }
+  .step-item:last-child { border-bottom:none; }
+  .step-icon { font-size:20px; flex-shrink:0; margin-top:1px; }
+  .step-text strong { font-size:14px; color:var(--forest); display:block; font-family:'Plus Jakarta Sans',sans-serif; }
+  .step-text span { font-size:12px; color:var(--muted); font-family:'Plus Jakarta Sans',sans-serif; }
+
+  /* ── RESULT HERO ── */
+  .result-hero { background:var(--forest); border-radius:var(--radius); padding:28px 24px; text-align:center; margin-bottom:16px; position:relative; overflow:hidden; }
+  .result-hero::before { content:''; position:absolute; top:-20px; right:-20px; width:120px; height:120px; border-radius:50%; background:rgba(232,160,69,0.1); }
+  .result-hero-label { font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,0.55); margin-bottom:8px; font-family:'Plus Jakarta Sans',sans-serif; }
+  .result-range { font-family:'Fraunces',serif; font-size:32px; font-weight:900; color:var(--amber); margin-bottom:4px; }
+  .result-hero p { font-size:13px; color:rgba(255,255,255,0.6); font-family:'Plus Jakarta Sans',sans-serif; }
+  .anchor-badge { display:inline-block; background:var(--rust); color:#fff; font-size:12px; font-weight:600; padding:5px 14px; border-radius:20px; margin-top:10px; font-family:'Plus Jakarta Sans',sans-serif; }
+
+  /* ── SCRIPT CARD ── */
+  .script-card { background:#fff; border-radius:var(--radius); padding:20px; margin-bottom:14px; box-shadow:0 2px 12px var(--shadow); border-left:4px solid var(--forest-light); border-top:1.5px solid var(--border); border-right:1.5px solid var(--border); border-bottom:1.5px solid var(--border); }
+  .script-card .scenario { font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--forest-light); margin-bottom:8px; font-family:'Plus Jakarta Sans',sans-serif; }
+  .script-card .script-text { font-size:15px; line-height:1.75; color:var(--forest); border:2px dashed var(--light-gray); border-radius:var(--radius-sm); padding:14px; background:var(--warm-white); position:relative; cursor:pointer; transition:border-color 0.2s; }
+  .script-card .script-text:hover { border-color:var(--amber); }
+  .copy-hint { font-size:11px; color:var(--muted); margin-top:8px; display:flex; align-items:center; gap:5px; font-family:'Plus Jakarta Sans',sans-serif; }
+  .copied-toast { display:none; background:var(--green); color:#fff; font-size:12px; font-weight:600; padding:4px 12px; border-radius:20px; margin-top:6px; font-family:'Plus Jakarta Sans',sans-serif; }
+
+  /* ── OBJECTIONS ── */
+  .objection-block { margin-bottom:20px; }
+  .objection-q { font-weight:600; font-size:14px; color:var(--rust); margin-bottom:8px; display:flex; align-items:flex-start; gap:8px; font-family:'Plus Jakarta Sans',sans-serif; }
+  .objection-a { font-size:14px; line-height:1.7; color:var(--forest); background:var(--warm-white); border-radius:var(--radius-sm); padding:12px 15px; border:1.5px solid var(--light-gray); cursor:pointer; transition:border-color 0.2s; font-family:'Plus Jakarta Sans',sans-serif; }
+  .objection-a:hover { border-color:var(--amber); }
+
+  /* ── CHECKLIST ── */
+  .checklist-item { display:flex; align-items:center; gap:12px; padding:11px 0; border-bottom:1px solid var(--light-gray); font-size:14px; color:var(--forest); font-family:'Plus Jakarta Sans',sans-serif; }
+  .checklist-item:last-child { border-bottom:none; }
+  .check-icon { color:var(--green); font-size:18px; flex-shrink:0; }
+
+  /* ── CONFIDENCE METER ── */
+  .confidence-bar-wrap { margin:10px 0 16px; }
+  .confidence-label-row { display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin-bottom:6px; font-family:'Plus Jakarta Sans',sans-serif; }
+  .conf-level { font-weight:700; color:var(--forest); font-size:14px; font-family:'Plus Jakarta Sans',sans-serif; }
+  .confidence-bar { height:10px; background:var(--light-gray); border-radius:8px; overflow:hidden; }
+  .confidence-fill { height:100%; border-radius:8px; background:linear-gradient(90deg,var(--forest-light),var(--forest)); transition:width 0.8s ease; }
+
+  /* ── SAVE BADGE ── */
+  .saved-note { text-align:center; font-size:12px; color:var(--muted); margin-top:16px; font-family:'Plus Jakarta Sans',sans-serif; }
+  .saved-note span { color:var(--green); font-weight:600; }
+
+  /* ── TABS ── */
+  .tab-bar { display:flex; background:#fff; border-radius:var(--radius); padding:6px; gap:4px; margin-bottom:16px; box-shadow:0 2px 8px var(--shadow); border:1.5px solid var(--border); }
+  .tab-btn { flex:1; padding:10px 6px; border:none; background:transparent; border-radius:10px; font-family:'Plus Jakarta Sans',sans-serif; font-size:12px; font-weight:600; color:var(--muted); cursor:pointer; transition:all 0.2s; text-align:center; line-height:1.3; }
+  .tab-btn.active { background:var(--forest); color:#fff; }
+  .tab-content { display:none; }
+  .tab-content.active { display:block; animation:fadeUp 0.3s ease; }
+
+  /* ── DIVIDER ── */
+  .divider { display:flex; align-items:center; gap:10px; margin:18px 0; color:var(--muted); font-size:12px; font-family:'Plus Jakarta Sans',sans-serif; }
+  .divider::before, .divider::after { content:''; flex:1; height:1px; background:var(--light-gray); }
+
+  /* ── FOOTER ── */
+  .footer-note { text-align:center; font-size:12px; color:var(--muted); margin-top:20px; padding:0 10px; line-height:1.6; font-family:'Plus Jakarta Sans',sans-serif; }
+
+  /* ── SALARY VIZ ── */
+  .salary-viz { background:#fff; border-radius:var(--radius); padding:20px; margin-bottom:14px; box-shadow:0 2px 12px var(--shadow); border:1.5px solid var(--border); display:none; }
+  .salary-viz.visible { display:block; animation:fadeUp 0.4s ease; }
+  .salary-viz-title { font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; font-family:'Plus Jakarta Sans',sans-serif; }
+  .salary-track { position:relative; height:10px; background:var(--light-gray); border-radius:8px; margin:28px 0 10px; }
+  .salary-segment { position:absolute; height:100%; border-radius:8px; top:0; transition:all 0.5s ease; }
+  .seg-ask { background:var(--forest); border-radius:0 8px 8px 0; }
+  .salary-pin { position:absolute; top:-22px; transform:translateX(-50%); font-size:10px; font-weight:700; white-space:nowrap; color:var(--forest); font-family:'Plus Jakarta Sans',sans-serif; }
+  .salary-dot { position:absolute; width:14px; height:14px; border-radius:50%; top:50%; transform:translate(-50%,-50%); border:2.5px solid #fff; box-shadow:0 1px 5px rgba(0,0,0,0.18); }
+  .salary-legend { display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
+  .legend-item { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted); font-family:'Plus Jakarta Sans',sans-serif; }
+  .legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+  /* ── ACCORDION ── */
+  .accordion { background:#fff; border-radius:var(--radius); margin-bottom:12px; box-shadow:0 2px 12px var(--shadow); border:1.5px solid var(--border); overflow:hidden; }
+  .accordion-header { display:flex; align-items:center; justify-content:space-between; padding:18px 20px; cursor:pointer; user-select:none; -webkit-tap-highlight-color:transparent; }
+  .accordion-header-left { display:flex; align-items:center; gap:10px; font-weight:600; font-size:15px; font-family:'Plus Jakarta Sans',sans-serif; }
+  .accordion-arrow { font-size:12px; color:var(--muted); transition:transform 0.3s ease; flex-shrink:0; }
+  .accordion.open .accordion-arrow { transform:rotate(180deg); }
+  .accordion-body { max-height:0; overflow:hidden; transition:max-height 0.35s ease; }
+  .accordion.open .accordion-body { max-height:800px; }
+  .accordion-inner { padding:0 20px 18px; border-top:1px solid var(--light-gray); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="kit-brand">
+    <div class="kit-logo">
+      <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M2 3h12v2H2V3zm0 4h8v2H2V7zm0 4h10v2H2v-2z"/></svg>
+    </div>
+    <span class="kit-name">FreelanceKit</span>
+    <div class="kit-divider"></div>
+    <span class="kit-tool">Negotiation Coach</span>
+  </div>
+  <h1>Get Paid <span>What You're Worth</span></h1>
+  <p>Answer a few questions. Get your number, your script, and your confidence.</p>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-wrap">
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+  <div class="progress-label">
+    <span id="progressText">Step 0 of 4</span>
+    <span id="progressPct">0%</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- SCREEN 0: WELCOME -->
+  <div class="screen active" id="screen-0">
+    <div class="welcome-hero">
+      <span class="welcome-icon">🤝</span>
+      <h2>Your Personal Negotiation Coach</h2>
+      <p>Most people leave thousands on the table every year — not because they're underqualified, but because they don't know what to say.</p>
+      <p>This tool gives you your target number, your opening line, and answers to every tricky question they might throw at you.</p>
+    </div>
+    <div class="steps-list">
+      <div class="step-item"><div class="step-icon">📋</div><div class="step-text"><strong>Step 1 — Your Situation</strong><span>Tell us about the job and your experience</span></div></div>
+      <div class="step-item"><div class="step-icon">💵</div><div class="step-text"><strong>Step 2 — The Numbers</strong><span>Current pay, their offer, what you actually want</span></div></div>
+      <div class="step-item"><div class="step-icon">🎯</div><div class="step-text"><strong>Step 3 — Your Strengths</strong><span>What makes you worth more</span></div></div>
+      <div class="step-item"><div class="step-icon">📜</div><div class="step-text"><strong>Step 4 — Your Scripts</strong><span>Exact words to say, ready to copy &amp; use</span></div></div>
+    </div>
+    <button class="btn btn-primary" onclick="goTo(1)">Let's Build Your Strategy →</button>
+    <p class="footer-note">🔒 Everything stays on your phone. Nothing is sent anywhere.</p>
+  </div>
+
+  <!-- SCREEN 1: SITUATION -->
+  <div class="screen" id="screen-1">
+    <div class="section-label">
+      <div class="section-num">1</div>
+      <div class="section-title">Your Situation</div>
+    </div>
+    <p class="section-sub">Tell us the basics so we can tailor your strategy.</p>
+    <div class="card">
+      <label>Your name <span class="input-hint">(so scripts feel personal)</span></label>
+      <input type="text" id="yourName" placeholder="e.g. Sarah" />
+      <label>What type of negotiation is this?</label>
+      <div class="chip-group">
+        <input type="radio" name="negType" id="nt1" value="new_job"><label for="nt1">🆕 New job offer</label>
+        <input type="radio" name="negType" id="nt2" value="raise" checked><label for="nt2">📈 Asking for a raise</label>
+        <input type="radio" name="negType" id="nt3" value="freelance"><label for="nt3">💼 Freelance / client rate</label>
+        <input type="radio" name="negType" id="nt4" value="promotion"><label for="nt4">🚀 Promotion</label>
+      </div>
+      <label>Your industry / field</label>
+      <input type="text" id="industry" placeholder="e.g. Marketing, Software, Healthcare..." />
+      <label>Years of relevant experience</label>
+      <div class="chip-group">
+        <input type="radio" name="expYears" id="ex0" value="0-2" checked><label for="ex0">0–2 yrs</label>
+        <input type="radio" name="expYears" id="ex1" value="3-5"><label for="ex1">3–5 yrs</label>
+        <input type="radio" name="expYears" id="ex2" value="6-10"><label for="ex2">6–10 yrs</label>
+        <input type="radio" name="expYears" id="ex3" value="10+"><label for="ex3">10+ yrs</label>
+      </div>
+      <label>How would you rate your market demand right now?</label>
+      <div class="chip-group">
+        <input type="radio" name="demand" id="d1" value="low"><label for="d1">😐 Low</label>
+        <input type="radio" name="demand" id="d2" value="medium" checked><label for="d2">🙂 Medium</label>
+        <input type="radio" name="demand" id="d3" value="high"><label for="d3">🔥 High</label>
+        <input type="radio" name="demand" id="d4" value="rare"><label for="d4">💎 My skills are rare</label>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="goTo(2)">Continue to Numbers →</button>
+  </div>
+
+  <!-- SCREEN 2: NUMBERS -->
+  <div class="screen" id="screen-2">
+    <div class="section-label">
+      <div class="section-num">2</div>
+      <div class="section-title">The Numbers</div>
+    </div>
+    <p class="section-sub">Don't worry — these are just for calculating your strategy. Be honest with yourself here.</p>
+    <div class="card">
+      <label>💵 What are you currently earning? <span class="input-hint">(annual)</span></label>
+      <div class="input-prefix-wrap"><span class="input-prefix">$</span><input type="number" id="currentPay" placeholder="0 if this is your first job" /></div>
+      <label>🎯 Their offer / current offer on the table <span class="input-hint">(0 if none yet)</span></label>
+      <div class="input-prefix-wrap"><span class="input-prefix">$</span><input type="number" id="theirOffer" placeholder="0 if no offer yet" /></div>
+      <label>✨ What salary do you truly want? <span class="input-hint">(your dream number)</span></label>
+      <div class="input-prefix-wrap"><span class="input-prefix">$</span><input type="number" id="wantPay" placeholder="Be ambitious — this is private" /></div>
+      <label>⚠️ Your walk-away number <span class="input-hint">(minimum you'd accept)</span></label>
+      <div class="input-prefix-wrap"><span class="input-prefix">$</span><input type="number" id="walkAway" placeholder="Below this, you'd decline" /></div>
+    </div>
+
+    <!-- SALARY VISUALIZATION -->
+    <div class="salary-viz" id="salaryViz">
+      <div class="salary-viz-title">📊 Your Number Landscape</div>
+      <div class="salary-track" id="salaryTrack"></div>
+      <div class="salary-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--muted)"></div>Current</div>
+        <div class="legend-item" id="legend-offer" style="display:none"><div class="legend-dot" style="background:var(--amber)"></div>Their offer</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--forest-light)"></div>Your goal</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--forest)"></div>Open at (anchor)</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <strong>💡 Coach Tip</strong>
+      The "anchor" (the first number you say) sets the whole negotiation. We'll help you anchor high but not recklessly so.
+    </div>
+    <button class="btn btn-primary" onclick="goTo(3)">Continue to Strengths →</button>
+    <button class="btn btn-secondary" onclick="goTo(1)">← Back</button>
+  </div>
+
+  <!-- SCREEN 3: STRENGTHS -->
+  <div class="screen" id="screen-3">
+    <div class="section-label">
+      <div class="section-num">3</div>
+      <div class="section-title">Your Strengths</div>
+    </div>
+    <p class="section-sub">This is ammunition. The more specific, the stronger your case.</p>
+    <div class="card">
+      <label>🏆 Your biggest recent win at work <span class="input-hint">(result, not just task)</span></label>
+      <textarea id="bigWin" placeholder="e.g. Grew email list by 40% in 3 months, saving $8,000 in ad spend..."></textarea>
+      <label>📊 A specific number that shows your value <span class="input-hint">(revenue, savings, time saved...)</span></label>
+      <input type="text" id="specificNum" placeholder="e.g. Managed $200K budget, reduced churn by 15%..." />
+      <label>🎓 What makes you different from other candidates?</label>
+      <textarea id="differentiator" placeholder="e.g. I have both the technical AND communication skills, I'm certified in X, I built Y from scratch..."></textarea>
+      <label>Do you have competing offers or other options?</label>
+      <div class="chip-group">
+        <input type="radio" name="leverage" id="lev1" value="yes_offer"><label for="lev1">✅ Yes, another offer</label>
+        <input type="radio" name="leverage" id="lev2" value="yes_options" checked><label for="lev2">🟡 Interviewing elsewhere</label>
+        <input type="radio" name="leverage" id="lev3" value="no"><label for="lev3">❌ No other options</label>
+      </div>
+      <label>How confident do you feel walking in?</label>
+      <div class="slider-wrap">
+        <div class="slider-val" id="confVal">5 / 10</div>
+        <input type="range" id="confSlider" min="1" max="10" value="5" oninput="document.getElementById('confVal').textContent=this.value+' / 10'">
+        <div class="slider-labels"><span>Nervous 😬</span><span>Fired up 🔥</span></div>
+      </div>
+    </div>
+    <div class="tip-box">
+      <strong>💡 Coach Tip</strong>
+      Negotiating is not rude. 85% of employers expect it. The ones who don't offer more when pushed — you just have to push.
+    </div>
+    <button class="btn btn-primary" onclick="buildResults()">✨ Generate My Scripts →</button>
+    <button class="btn btn-secondary" onclick="goTo(2)">← Back</button>
+  </div>
+
+  <!-- SCREEN 4: RESULTS -->
+  <div class="screen" id="screen-4">
+
+    <div class="result-hero">
+      <div class="result-hero-label">Your Target Ask</div>
+      <div class="result-range" id="resultRange">$85,000 – $92,000</div>
+      <p id="resultNote">Based on your situation and goals</p>
+      <div class="anchor-badge" id="anchorBadge">🎯 Open at: $92,000</div>
+    </div>
+
+    <div class="card">
+      <label style="margin-bottom:10px;">Your Negotiation Confidence Score</label>
+      <div class="confidence-bar-wrap">
+        <div class="confidence-label-row">
+          <span>Readiness</span>
+          <span class="conf-level" id="confLevelLabel">Strong</span>
+        </div>
+        <div class="confidence-bar"><div class="confidence-fill" id="confBarFill" style="width:0%"></div></div>
+      </div>
+      <p style="font-size:13px;color:var(--muted);line-height:1.6;" id="confMessage"></p>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('scripts')">📜 Scripts</button>
+      <button class="tab-btn" onclick="switchTab('objections')">💬 Objections</button>
+      <button class="tab-btn" onclick="switchTab('checklist')">✅ Checklist</button>
+      <button class="tab-btn" onclick="switchTab('dos')">⚡ Do's &amp; Don'ts</button>
+    </div>
+
+    <!-- TAB: SCRIPTS -->
+    <div class="tab-content active" id="tab-scripts">
+      <div class="script-card">
+        <div class="scenario">🎬 Opening Line — Start the Conversation</div>
+        <div class="script-text" id="script-open" onclick="copyScript('script-open','toast-open')">Loading...</div>
+        <div class="copy-hint">👆 Tap to copy</div>
+        <div class="copied-toast" id="toast-open">✅ Copied!</div>
+      </div>
+      <div class="script-card">
+        <div class="scenario">💵 Stating Your Number — The Ask</div>
+        <div class="script-text" id="script-ask" onclick="copyScript('script-ask','toast-ask')">Loading...</div>
+        <div class="copy-hint">👆 Tap to copy</div>
+        <div class="copied-toast" id="toast-ask">✅ Copied!</div>
+      </div>
+      <div class="script-card">
+        <div class="scenario">⏸️ When They Go Silent (Don't Fill the Silence!)</div>
+        <div class="script-text" id="script-silence" onclick="copyScript('script-silence','toast-silence')">Loading...</div>
+        <div class="copy-hint">👆 Tap to copy</div>
+        <div class="copied-toast" id="toast-silence">✅ Copied!</div>
+      </div>
+      <div class="script-card">
+        <div class="scenario">✅ When They Say Yes</div>
+        <div class="script-text" id="script-yes" onclick="copyScript('script-yes','toast-yes')">Loading...</div>
+        <div class="copy-hint">👆 Tap to copy</div>
+        <div class="copied-toast" id="toast-yes">✅ Copied!</div>
+      </div>
+      <div class="script-card">
+        <div class="scenario">🚶 Your Walk-Away Line</div>
+        <div class="script-text" id="script-walk" onclick="copyScript('script-walk','toast-walk')">Loading...</div>
+        <div class="copy-hint">👆 Tap to copy</div>
+        <div class="copied-toast" id="toast-walk">✅ Copied!</div>
+      </div>
+    </div>
+
+    <!-- TAB: OBJECTIONS -->
+    <div class="tab-content" id="tab-objections">
+      <div class="tip-box">
+        <strong>💡 How to use these</strong>
+        When they push back, don't panic. Use these responses word-for-word or close to it. Tap any answer to copy it.
+      </div>
+      <div class="objection-block">
+        <div class="objection-q">❓ "We don't have budget for that."</div>
+        <div class="objection-a" id="obj1" onclick="copyScript('obj1','toast-obj1')">Loading...</div>
+        <div class="copied-toast" id="toast-obj1">✅ Copied!</div>
+      </div>
+      <div class="objection-block">
+        <div class="objection-q">❓ "That's above our pay band."</div>
+        <div class="objection-a" id="obj2" onclick="copyScript('obj2','toast-obj2')">Loading...</div>
+        <div class="copied-toast" id="toast-obj2">✅ Copied!</div>
+      </div>
+      <div class="objection-block">
+        <div class="objection-q">❓ "What are you making now?"</div>
+        <div class="objection-a" id="obj3" onclick="copyScript('obj3','toast-obj3')">Loading...</div>
+        <div class="copied-toast" id="toast-obj3">✅ Copied!</div>
+      </div>
+      <div class="objection-block">
+        <div class="objection-q">❓ "Can you be flexible on that number?"</div>
+        <div class="objection-a" id="obj4" onclick="copyScript('obj4','toast-obj4')">Loading...</div>
+        <div class="copied-toast" id="toast-obj4">✅ Copied!</div>
+      </div>
+      <div class="objection-block">
+        <div class="objection-q">❓ "We need to think about it."</div>
+        <div class="objection-a" id="obj5" onclick="copyScript('obj5','toast-obj5')">Loading...</div>
+        <div class="copied-toast" id="toast-obj5">✅ Copied!</div>
+      </div>
+      <div class="objection-block">
+        <div class="objection-q">❓ "We were thinking more like [lower number]."</div>
+        <div class="objection-a" id="obj6" onclick="copyScript('obj6','toast-obj6')">Loading...</div>
+        <div class="copied-toast" id="toast-obj6">✅ Copied!</div>
+      </div>
+    </div>
+
+    <!-- TAB: CHECKLIST -->
+    <div class="tab-content" id="tab-checklist">
+      <div class="card">
+        <div style="font-weight:700;color:var(--forest);margin-bottom:14px;font-size:15px;font-family:'Plus Jakarta Sans',sans-serif;">✅ Before You Walk In</div>
+        <div class="checklist-item"><div class="check-icon">✓</div>I know my target range and opening number</div>
+        <div class="checklist-item"><div class="check-icon">✓</div>I have 2–3 specific wins / results ready to mention</div>
+        <div class="checklist-item"><div class="check-icon">✓</div>I've researched market rates on Glassdoor or LinkedIn</div>
+        <div class="checklist-item"><div class="check-icon">✓</div>I know my walk-away number and I'm okay with it</div>
+        <div class="checklist-item"><div class="check-icon">✓</div>I've practiced saying my number out loud (seriously, do this)</div>
+        <div class="checklist-item"><div class="check-icon">✓</div>I'm ready to be silent after I state my ask</div>
+        <div class="checklist-item"><div class="check-icon">✓</div>I have the objection responses ready</div>
+      </div>
+      <div class="card">
+        <div style="font-weight:700;color:var(--forest);margin-bottom:14px;font-size:15px;font-family:'Plus Jakarta Sans',sans-serif;">🎯 During the Negotiation</div>
+        <div class="checklist-item"><div class="check-icon">✓</div>Let them speak first if possible</div>
+        <div class="checklist-item"><div class="check-icon">✓</div>Never give a range first (they'll pick the bottom)</div>
+        <div class="checklist-item"><div class="check-icon">✓</div>Anchor HIGH — you can always come down, never go up</div>
+        <div class="checklist-item"><div class="check-icon">✓</div>After naming your number: STOP TALKING</div>
+        <div class="checklist-item"><div class="check-icon">✓</div>If they push back: "I understand — can you help me understand the constraints?"</div>
+        <div class="checklist-item"><div class="check-icon">✓</div>Negotiate benefits if salary is truly stuck (PTO, remote, title)</div>
+        <div class="checklist-item"><div class="check-icon">✓</div>Get any final offer in writing before you celebrate</div>
+      </div>
+    </div>
+
+    <!-- TAB: DOS & DON'TS -->
+    <div class="tab-content" id="tab-dos">
+      <div class="accordion open" id="acc-dos">
+        <div class="accordion-header" onclick="toggleAccordion('acc-dos')">
+          <div class="accordion-header-left" style="color:var(--green);">✅ DO These Things</div>
+          <div class="accordion-arrow">▼</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-inner">
+            <div class="checklist-item"><div class="check-icon" style="color:var(--green);">✓</div>Express excitement about the role first, then negotiate</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--green);">✓</div>Use specific numbers — "87,500" sounds more researched than "around 90k"</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--green);">✓</div>Ask for 24–48 hours to consider a verbal offer</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--green);">✓</div>Mention competing offers if you have them (early and confidently)</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--green);">✓</div>Negotiate benefits — vacation, remote days, start date, signing bonus</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--green);">✓</div>Send a follow-up email summarizing what was agreed</div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion" id="acc-donts">
+        <div class="accordion-header" onclick="toggleAccordion('acc-donts')">
+          <div class="accordion-header-left" style="color:var(--red);">🚫 DON'T Do These</div>
+          <div class="accordion-arrow">▼</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-inner">
+            <div class="checklist-item"><div class="check-icon" style="color:var(--red);">✗</div>Say "I need this because of my bills / personal situation"</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--red);">✗</div>Apologize for asking — "Sorry, but could I ask for..."</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--red);">✗</div>Give a range when asked for a number (they pick the bottom)</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--red);">✗</div>Accept on the spot — always ask for time to review</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--red);">✗</div>Reveal your current salary if you're in a state where they can't ask</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--red);">✗</div>Threaten to leave unless you are truly ready to walk</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--red);">✗</div>Fill silence — say your number, then wait, even if it feels awkward</div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion" id="acc-mindset">
+        <div class="accordion-header" onclick="toggleAccordion('acc-mindset')">
+          <div class="accordion-header-left" style="color:var(--amber-dk);">🧠 The Right Mindset</div>
+          <div class="accordion-arrow">▼</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-inner">
+            <div class="checklist-item"><div class="check-icon" style="color:var(--amber);">★</div>You are not asking for a favour. You are negotiating a business deal.</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--amber);">★</div>The discomfort you feel lasts 30 seconds. Underpaying yourself lasts years.</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--amber);">★</div>85% of employers expect you to negotiate. Most are relieved when you do — it signals confidence.</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--amber);">★</div>The worst outcome is "no" — which puts you exactly where you started.</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--amber);">★</div>Practice your number out loud before you walk in. Say it until it sounds normal.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider">or</div>
+    <button class="btn btn-secondary" onclick="goTo(0); resetAll()">🔄 Start Over</button>
+    <p class="saved-note">💾 <span>Your answers are saved</span> in this browser automatically.</p>
+
+  </div>
+
+</div>
+
+<script>
+let currentScreen = 0;
+const TOTAL_STEPS = 4;
+
+function goTo(n) {
+  document.getElementById('screen-' + currentScreen).classList.remove('active');
+  document.getElementById('screen-' + n).classList.add('active');
+  currentScreen = n;
+  updateProgress(n);
+  window.scrollTo({top:0, behavior:'smooth'});
+  saveData();
+}
+
+function updateProgress(n) {
+  const pct = Math.round((n / TOTAL_STEPS) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = n === 0 ? 'Intro' : 'Step ' + n + ' of ' + (TOTAL_STEPS - 1);
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+function buildResults() {
+  const name       = document.getElementById('yourName').value.trim() || 'you';
+  const negType    = document.querySelector('input[name="negType"]:checked')?.value || 'raise';
+  const experience = document.querySelector('input[name="expYears"]:checked')?.value || '3-5';
+  const demand     = document.querySelector('input[name="demand"]:checked')?.value || 'medium';
+  const current    = parseFloat(document.getElementById('currentPay').value) || 0;
+  const offer      = parseFloat(document.getElementById('theirOffer').value) || 0;
+  const want       = parseFloat(document.getElementById('wantPay').value) || 0;
+  const walkAway   = parseFloat(document.getElementById('walkAway').value) || 0;
+  const bigWin     = document.getElementById('bigWin').value.trim();
+  const specNum    = document.getElementById('specificNum').value.trim();
+  const leverage   = document.querySelector('input[name="leverage"]:checked')?.value || 'yes_options';
+  const confSlider = parseInt(document.getElementById('confSlider').value) || 5;
+
+  const base   = want > 0 ? want : (offer > 0 ? offer * 1.15 : current * 1.2);
+  const anchor = Math.round(base * 1.08 / 1000) * 1000;
+  const low    = Math.round(base / 1000) * 1000;
+  const fmt    = n => '$' + n.toLocaleString('en-US');
+
+  document.getElementById('resultRange').textContent = fmt(low) + ' – ' + fmt(anchor);
+  document.getElementById('anchorBadge').textContent = '🎯 Open at: ' + fmt(anchor);
+
+  let noteText = 'Based on your goals';
+  if (offer > 0 && anchor > offer) noteText = 'That\'s ' + fmt(anchor - offer) + ' more than their offer';
+  else if (offer > 0) noteText = 'You\'re in a strong position already';
+  document.getElementById('resultNote').textContent = noteText;
+
+  let confScore = confSlider * 6;
+  if (leverage === 'yes_offer') confScore = Math.min(100, confScore + 20);
+  if (leverage === 'yes_options') confScore = Math.min(100, confScore + 10);
+  if (demand === 'high' || demand === 'rare') confScore = Math.min(100, confScore + 15);
+  if (bigWin.length > 20) confScore = Math.min(100, confScore + 10);
+  confScore = Math.max(30, Math.min(95, confScore));
+
+  setTimeout(() => { document.getElementById('confBarFill').style.width = confScore + '%'; }, 300);
+
+  const confLabel = confScore >= 75 ? 'Strong 💪' : confScore >= 50 ? 'Building 📈' : 'Growing 🌱';
+  document.getElementById('confLevelLabel').textContent = confLabel;
+  document.getElementById('confMessage').textContent = confScore >= 75
+    ? 'You have real leverage here. Walk in with your head high — your value is clear.'
+    : confScore >= 50
+    ? 'You have a solid case. Remember: the worst they can say is no, and that changes nothing.'
+    : 'Everyone starts here. Having a script removes the pressure — you just follow it.';
+
+  const firstName = name.charAt(0).toUpperCase() + name.slice(1);
+  const winSnippet = bigWin.length > 10 ? bigWin.substring(0, 80) : 'the results I\'ve driven';
+  const numSnippet = specNum.length > 5 ? specNum : 'measurable impact';
+  const leverageStr = leverage === 'yes_offer' ? ' I do have another offer I\'m considering,' : leverage === 'yes_options' ? ' I\'m in conversations with a couple of other companies,' : '';
+
+  document.getElementById('script-open').innerHTML = `"I'm really excited about this opportunity — I can already see the impact I'd make. Before we finalize anything, I'd like to talk about compensation so we're aligned."`;
+  document.getElementById('script-ask').innerHTML  = `"Based on my ${experience} years of experience in the field, and results like ${winSnippet},${leverageStr} I'm targeting a salary of <strong>${fmt(anchor)}</strong>. I believe that reflects both the market rate and the value I bring."`;
+  document.getElementById('script-silence').innerHTML = `"I'm happy to give you a moment to think about that." <em>[Then stop talking. Count to 20 in your head if you need to. The first person to speak after naming a number loses leverage.]</em>`;
+  document.getElementById('script-yes').innerHTML  = `"Thank you — I'm really glad we could land there. I'm excited to bring my best to this. Could we get that in writing so we're both on the same page? And is there flexibility on [benefits / start date / review timeline]?"`;
+  document.getElementById('script-walk').innerHTML = walkAway > 0
+    ? `"I really appreciate the offer and everything we've discussed. At ${fmt(walkAway)}, I'm not able to make it work — that's my minimum to make this transition make sense. If there's any way to get closer to ${fmt(low)}, I'm very motivated to say yes today."`
+    : `"I appreciate the offer. I need it to be closer to ${fmt(low)} to make this the right move for me. Is there any flexibility there?"`;
+
+  document.getElementById('obj1').innerHTML = `"I completely understand budget constraints — believe me, I've worked within them too. What I'd love to explore is whether there's flexibility in other ways: a 90-day review for a raise, a signing bonus, or additional PTO. What options do we have?"`;
+  document.getElementById('obj2').innerHTML = `"I appreciate you sharing that context. My research on the market rate for someone with my background and ${numSnippet} suggests ${fmt(anchor)} is competitive. Is the band something that can be revisited, or is there a pathway to adjust it?"`;
+  document.getElementById('obj3').innerHTML = `"I'd prefer to focus on the value I bring to this role rather than what I've been paid before. Based on the scope of this position and market data, I'm targeting ${fmt(anchor)}. Does that work for the team?"`;
+  document.getElementById('obj4').innerHTML = `"I've done my homework on this and I feel ${fmt(anchor)} is a fair number for what I bring. That said, I'm open to creative solutions — could we look at a performance-based review in 6 months, or are there other elements of the package we could adjust?"`;
+  document.getElementById('obj5').innerHTML = `"Of course, take the time you need. Just so I can plan accordingly, when do you think you'll have a decision? And is there anything else you need from me in the meantime?"`;
+  document.getElementById('obj6').innerHTML = `"I appreciate you sharing that. I've given ${fmt(anchor)} serious thought based on my experience and what I can deliver. Could we meet somewhere in between — like ${fmt(Math.round((anchor + (offer || low)) / 2 / 1000) * 1000)}? That feels fair to both of us."`;
+
+  goTo(4);
+}
+
+function toggleAccordion(id) { document.getElementById(id).classList.toggle('open'); }
+
+function updateSalaryViz() {
+  const current  = parseFloat(document.getElementById('currentPay').value) || 0;
+  const offer    = parseFloat(document.getElementById('theirOffer').value) || 0;
+  const want     = parseFloat(document.getElementById('wantPay').value) || 0;
+
+  const hasEnough = (current > 0 || offer > 0) && (want > 0);
+  const viz = document.getElementById('salaryViz');
+  if (!hasEnough) { viz.classList.remove('visible'); return; }
+  viz.classList.add('visible');
+
+  const base   = want > 0 ? want : (offer > 0 ? offer * 1.15 : current * 1.2);
+  const anchor = Math.round(base * 1.08 / 1000) * 1000;
+
+  const points = [];
+  if (current > 0) points.push({val:current, key:'current'});
+  if (offer   > 0) points.push({val:offer,   key:'offer'});
+  if (want    > 0) points.push({val:want,     key:'target'});
+  if (anchor  > 0) points.push({val:anchor,   key:'ask'});
+  points.sort((a,b) => a.val - b.val);
+
+  const min = points[0].val, max = points[points.length-1].val, range = max - min || 1;
+  const fmtK = n => '$' + Math.round(n/1000) + 'k';
+  const pct  = v => Math.max(2, Math.min(98, ((v-min)/range)*100));
+
+  const colors = { current:'var(--muted)', offer:'var(--amber)', target:'var(--forest-light)', ask:'var(--forest)' };
+  const labels = { current:'Current', offer:'Offer', target:'Goal', ask:'Ask' };
+
+  const track = document.getElementById('salaryTrack');
+  track.innerHTML = '';
+
+  const fillBar = document.createElement('div');
+  fillBar.className = 'salary-segment seg-ask';
+  fillBar.style.left = pct(points[0].val) + '%';
+  fillBar.style.width = (pct(points[points.length-1].val) - pct(points[0].val)) + '%';
+  fillBar.style.opacity = '0.25';
+  track.appendChild(fillBar);
+
+  points.forEach(p => {
+    const dot = document.createElement('div');
+    dot.className = 'salary-dot';
+    dot.style.left = pct(p.val) + '%';
+    dot.style.background = colors[p.key];
+    track.appendChild(dot);
+    const pin = document.createElement('div');
+    pin.className = 'salary-pin';
+    pin.style.left = pct(p.val) + '%';
+    pin.style.color = colors[p.key];
+    pin.innerHTML = `<span style="font-size:9px;display:block;opacity:0.75;">${labels[p.key]}</span>${fmtK(p.val)}`;
+    track.appendChild(pin);
+  });
+
+  document.getElementById('legend-offer').style.display = offer > 0 ? 'flex' : 'none';
+}
+
+['currentPay','theirOffer','wantPay','walkAway'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateSalaryViz);
+});
+
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tabName).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function copyScript(elId, toastId) {
+  const el   = document.getElementById(elId);
+  const text = el.innerText || el.textContent;
+  if (navigator.clipboard) { navigator.clipboard.writeText(text); }
+  else {
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+  }
+  const toast = document.getElementById(toastId);
+  toast.style.display = 'inline-block';
+  setTimeout(() => { toast.style.display = 'none'; }, 2000);
+}
+
+function saveData() {
+  const data = {
+    yourName: document.getElementById('yourName').value,
+    industry: document.getElementById('industry').value,
+    currentPay: document.getElementById('currentPay').value,
+    theirOffer: document.getElementById('theirOffer').value,
+    wantPay: document.getElementById('wantPay').value,
+    walkAway: document.getElementById('walkAway').value,
+    bigWin: document.getElementById('bigWin').value,
+    specificNum: document.getElementById('specificNum').value,
+    differentiator: document.getElementById('differentiator').value,
+    confSlider: document.getElementById('confSlider').value,
+  };
+  try { localStorage.setItem('negCoach_v2', JSON.stringify(data)); } catch(e){}
+}
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem('negCoach_v2');
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    const fields = ['yourName','industry','currentPay','theirOffer','wantPay','walkAway','bigWin','specificNum','differentiator'];
+    fields.forEach(f => { if (d[f]) document.getElementById(f).value = d[f]; });
+    if (d.confSlider) {
+      document.getElementById('confSlider').value = d.confSlider;
+      document.getElementById('confVal').textContent = d.confSlider + ' / 10';
+    }
+  } catch(e){}
+}
+
+function resetAll() {
+  try { localStorage.removeItem('negCoach_v2'); } catch(e){}
+  document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => el.value = '');
+  document.getElementById('confSlider').value = 5;
+  document.getElementById('confVal').textContent = '5 / 10';
+}
+
+document.addEventListener('input', saveData);
+document.addEventListener('change', saveData);
+loadData();
+updateSalaryViz();
+</script>
+</body>
+</html>
