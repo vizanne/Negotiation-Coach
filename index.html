@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FreelanceKit — Negotiation Coach</title>
+<title>FreelanceKit — Rate Negotiation Coach</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -15,7 +15,6 @@
     --amber-dk: #C4832A;
     --amber-pale: #FBE9C3;
     --forest: #1B2D4F;
-    --forest-mid: #2A4170;
     --forest-light: #5A7A99;
     --rust: #B85C38;
     --muted: #6B7A99;
@@ -28,23 +27,16 @@
     --radius-sm: 10px;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing:border-box; margin:0; padding:0; }
 
   body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    background: var(--cream);
-    color: var(--forest);
-    min-height: 100vh;
+    font-family:'Plus Jakarta Sans', sans-serif;
+    background:var(--cream); color:var(--forest);
+    min-height:100vh;
   }
 
   /* ── HEADER ── */
-  .header {
-    background: var(--forest);
-    padding: 24px 20px 20px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
+  .header { background:var(--forest); padding:24px 20px 20px; text-align:center; position:relative; overflow:hidden; }
   .header::before { content:''; position:absolute; top:-40px; right:-40px; width:160px; height:160px; border-radius:50%; background:rgba(232,160,69,0.12); }
   .header::after  { content:''; position:absolute; bottom:-30px; left:-20px; width:100px; height:100px; border-radius:50%; background:rgba(232,160,69,0.08); }
 
@@ -75,9 +67,9 @@
 
   /* ── SECTION HEADER ── */
   .section-label { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
-  .section-num { width:28px; height:28px; border-radius:50%; background:var(--forest); color:#fff; font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:'Plus Jakarta Sans',sans-serif; }
+  .section-num { width:28px; height:28px; border-radius:50%; background:var(--forest); color:#fff; font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
   .section-title { font-family:'Fraunces',serif; font-size:20px; font-weight:700; color:var(--forest); }
-  .section-sub { font-size:13px; color:var(--muted); margin-bottom:20px; padding-left:38px; font-weight:400; }
+  .section-sub { font-size:13px; color:var(--muted); margin-bottom:20px; padding-left:38px; }
 
   /* ── CARD ── */
   .card { background:#fff; border-radius:var(--radius); padding:20px; margin-bottom:14px; box-shadow:0 2px 12px var(--shadow); border:1.5px solid var(--border); }
@@ -97,7 +89,7 @@
   input[type="number"] { -moz-appearance:textfield; }
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button { -webkit-appearance:none; }
-  textarea { min-height:90px; resize:vertical; }
+  textarea { min-height:90px; resize:vertical; line-height:1.5; }
 
   /* ── DOLLAR PREFIX ── */
   .input-prefix-wrap { position:relative; margin-bottom:14px; }
@@ -122,7 +114,7 @@
   .btn-primary { background:var(--forest); color:#fff; box-shadow:0 4px 16px rgba(27,45,79,0.2); }
   .btn-primary:active { transform:scale(0.98); }
   .btn-secondary { background:transparent; color:var(--forest); border:2px solid var(--forest); margin-top:10px; }
-  .btn-gold { background:var(--amber); color:var(--forest); box-shadow:0 4px 18px rgba(232,160,69,0.3); }
+  .btn-amber { background:var(--amber); color:var(--forest); box-shadow:0 4px 18px rgba(232,160,69,0.3); }
 
   /* ── TIP BOX ── */
   .tip-box { background:var(--amber-pale); border-left:4px solid var(--amber); border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:14px; font-size:13px; color:var(--forest); line-height:1.6; font-family:'Plus Jakarta Sans',sans-serif; }
@@ -149,11 +141,23 @@
   .result-hero p { font-size:13px; color:rgba(255,255,255,0.6); font-family:'Plus Jakarta Sans',sans-serif; }
   .anchor-badge { display:inline-block; background:var(--rust); color:#fff; font-size:12px; font-weight:600; padding:5px 14px; border-radius:20px; margin-top:10px; font-family:'Plus Jakarta Sans',sans-serif; }
 
+  /* ── NUMBER LANDSCAPE ── */
+  .rate-viz { background:#fff; border-radius:var(--radius); padding:20px; margin-bottom:14px; box-shadow:0 2px 12px var(--shadow); border:1.5px solid var(--border); display:none; }
+  .rate-viz.visible { display:block; animation:fadeUp 0.4s ease; }
+  .rate-viz-title { font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; font-family:'Plus Jakarta Sans',sans-serif; }
+  .rate-track { position:relative; height:10px; background:var(--light-gray); border-radius:8px; margin:28px 0 10px; }
+  .rate-segment { position:absolute; height:100%; border-radius:8px; top:0; opacity:0.25; }
+  .rate-pin { position:absolute; top:-22px; transform:translateX(-50%); font-size:10px; font-weight:700; white-space:nowrap; font-family:'Plus Jakarta Sans',sans-serif; }
+  .rate-dot { position:absolute; width:14px; height:14px; border-radius:50%; top:50%; transform:translate(-50%,-50%); border:2.5px solid #fff; box-shadow:0 1px 5px rgba(0,0,0,0.18); }
+  .rate-legend { display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
+  .legend-item { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted); font-family:'Plus Jakarta Sans',sans-serif; }
+  .legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
   /* ── SCRIPT CARD ── */
   .script-card { background:#fff; border-radius:var(--radius); padding:20px; margin-bottom:14px; box-shadow:0 2px 12px var(--shadow); border-left:4px solid var(--forest-light); border-top:1.5px solid var(--border); border-right:1.5px solid var(--border); border-bottom:1.5px solid var(--border); }
   .script-card .scenario { font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--forest-light); margin-bottom:8px; font-family:'Plus Jakarta Sans',sans-serif; }
-  .script-card .script-text { font-size:15px; line-height:1.75; color:var(--forest); border:2px dashed var(--light-gray); border-radius:var(--radius-sm); padding:14px; background:var(--warm-white); position:relative; cursor:pointer; transition:border-color 0.2s; }
-  .script-card .script-text:hover { border-color:var(--amber); }
+  .script-text { font-size:15px; line-height:1.75; color:var(--forest); border:2px dashed var(--light-gray); border-radius:var(--radius-sm); padding:14px; background:var(--warm-white); cursor:pointer; transition:border-color 0.2s; }
+  .script-text:hover { border-color:var(--amber); }
   .copy-hint { font-size:11px; color:var(--muted); margin-top:8px; display:flex; align-items:center; gap:5px; font-family:'Plus Jakarta Sans',sans-serif; }
   .copied-toast { display:none; background:var(--green); color:#fff; font-size:12px; font-weight:600; padding:4px 12px; border-radius:20px; margin-top:6px; font-family:'Plus Jakarta Sans',sans-serif; }
 
@@ -164,20 +168,16 @@
   .objection-a:hover { border-color:var(--amber); }
 
   /* ── CHECKLIST ── */
-  .checklist-item { display:flex; align-items:center; gap:12px; padding:11px 0; border-bottom:1px solid var(--light-gray); font-size:14px; color:var(--forest); font-family:'Plus Jakarta Sans',sans-serif; }
+  .checklist-item { display:flex; align-items:flex-start; gap:12px; padding:11px 0; border-bottom:1px solid var(--light-gray); font-size:14px; color:var(--forest); font-family:'Plus Jakarta Sans',sans-serif; line-height:1.5; }
   .checklist-item:last-child { border-bottom:none; }
-  .check-icon { color:var(--green); font-size:18px; flex-shrink:0; }
+  .check-icon { font-size:16px; flex-shrink:0; margin-top:1px; }
 
   /* ── CONFIDENCE METER ── */
   .confidence-bar-wrap { margin:10px 0 16px; }
   .confidence-label-row { display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin-bottom:6px; font-family:'Plus Jakarta Sans',sans-serif; }
-  .conf-level { font-weight:700; color:var(--forest); font-size:14px; font-family:'Plus Jakarta Sans',sans-serif; }
+  .conf-level { font-weight:700; color:var(--forest); font-size:14px; }
   .confidence-bar { height:10px; background:var(--light-gray); border-radius:8px; overflow:hidden; }
   .confidence-fill { height:100%; border-radius:8px; background:linear-gradient(90deg,var(--forest-light),var(--forest)); transition:width 0.8s ease; }
-
-  /* ── SAVE BADGE ── */
-  .saved-note { text-align:center; font-size:12px; color:var(--muted); margin-top:16px; font-family:'Plus Jakarta Sans',sans-serif; }
-  .saved-note span { color:var(--green); font-weight:600; }
 
   /* ── TABS ── */
   .tab-bar { display:flex; background:#fff; border-radius:var(--radius); padding:6px; gap:4px; margin-bottom:16px; box-shadow:0 2px 8px var(--shadow); border:1.5px solid var(--border); }
@@ -186,35 +186,22 @@
   .tab-content { display:none; }
   .tab-content.active { display:block; animation:fadeUp 0.3s ease; }
 
-  /* ── DIVIDER ── */
-  .divider { display:flex; align-items:center; gap:10px; margin:18px 0; color:var(--muted); font-size:12px; font-family:'Plus Jakarta Sans',sans-serif; }
-  .divider::before, .divider::after { content:''; flex:1; height:1px; background:var(--light-gray); }
-
-  /* ── FOOTER ── */
-  .footer-note { text-align:center; font-size:12px; color:var(--muted); margin-top:20px; padding:0 10px; line-height:1.6; font-family:'Plus Jakarta Sans',sans-serif; }
-
-  /* ── SALARY VIZ ── */
-  .salary-viz { background:#fff; border-radius:var(--radius); padding:20px; margin-bottom:14px; box-shadow:0 2px 12px var(--shadow); border:1.5px solid var(--border); display:none; }
-  .salary-viz.visible { display:block; animation:fadeUp 0.4s ease; }
-  .salary-viz-title { font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; font-family:'Plus Jakarta Sans',sans-serif; }
-  .salary-track { position:relative; height:10px; background:var(--light-gray); border-radius:8px; margin:28px 0 10px; }
-  .salary-segment { position:absolute; height:100%; border-radius:8px; top:0; transition:all 0.5s ease; }
-  .seg-ask { background:var(--forest); border-radius:0 8px 8px 0; }
-  .salary-pin { position:absolute; top:-22px; transform:translateX(-50%); font-size:10px; font-weight:700; white-space:nowrap; color:var(--forest); font-family:'Plus Jakarta Sans',sans-serif; }
-  .salary-dot { position:absolute; width:14px; height:14px; border-radius:50%; top:50%; transform:translate(-50%,-50%); border:2.5px solid #fff; box-shadow:0 1px 5px rgba(0,0,0,0.18); }
-  .salary-legend { display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
-  .legend-item { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted); font-family:'Plus Jakarta Sans',sans-serif; }
-  .legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
-
   /* ── ACCORDION ── */
   .accordion { background:#fff; border-radius:var(--radius); margin-bottom:12px; box-shadow:0 2px 12px var(--shadow); border:1.5px solid var(--border); overflow:hidden; }
-  .accordion-header { display:flex; align-items:center; justify-content:space-between; padding:18px 20px; cursor:pointer; user-select:none; -webkit-tap-highlight-color:transparent; }
+  .accordion-header { display:flex; align-items:center; justify-content:space-between; padding:18px 20px; cursor:pointer; user-select:none; }
   .accordion-header-left { display:flex; align-items:center; gap:10px; font-weight:600; font-size:15px; font-family:'Plus Jakarta Sans',sans-serif; }
   .accordion-arrow { font-size:12px; color:var(--muted); transition:transform 0.3s ease; flex-shrink:0; }
   .accordion.open .accordion-arrow { transform:rotate(180deg); }
   .accordion-body { max-height:0; overflow:hidden; transition:max-height 0.35s ease; }
-  .accordion.open .accordion-body { max-height:800px; }
+  .accordion.open .accordion-body { max-height:1000px; }
   .accordion-inner { padding:0 20px 18px; border-top:1px solid var(--light-gray); }
+
+  /* ── MISC ── */
+  .divider { display:flex; align-items:center; gap:10px; margin:18px 0; color:var(--muted); font-size:12px; font-family:'Plus Jakarta Sans',sans-serif; }
+  .divider::before, .divider::after { content:''; flex:1; height:1px; background:var(--light-gray); }
+  .footer-note { text-align:center; font-size:12px; color:var(--muted); margin-top:20px; padding:0 10px; line-height:1.6; font-family:'Plus Jakarta Sans',sans-serif; }
+  .saved-note { text-align:center; font-size:12px; color:var(--muted); margin-top:16px; font-family:'Plus Jakarta Sans',sans-serif; }
+  .saved-note span { color:var(--green); font-weight:600; }
 </style>
 </head>
 <body>
@@ -227,19 +214,17 @@
     </div>
     <span class="kit-name">FreelanceKit</span>
     <div class="kit-divider"></div>
-    <span class="kit-tool">Negotiation Coach</span>
+    <span class="kit-tool">Rate Negotiation Coach</span>
   </div>
-  <h1>Get Paid <span>What You're Worth</span></h1>
-  <p>Answer a few questions. Get your number, your script, and your confidence.</p>
+  <h1>Charge What You're <span>Worth</span></h1>
+  <p>Stop undercharging. Get the exact words to win every rate negotiation with clients.</p>
 </div>
 
 <!-- PROGRESS BAR -->
 <div class="progress-wrap">
-  <div class="progress-track">
-    <div class="progress-fill" id="progressFill" style="width:0%"></div>
-  </div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
   <div class="progress-label">
-    <span id="progressText">Step 0 of 4</span>
+    <span id="progressText">Intro</span>
     <span id="progressPct">0%</span>
   </div>
 </div>
@@ -249,19 +234,19 @@
   <!-- SCREEN 0: WELCOME -->
   <div class="screen active" id="screen-0">
     <div class="welcome-hero">
-      <span class="welcome-icon">🤝</span>
-      <h2>Your Personal Negotiation Coach</h2>
-      <p>Most people leave thousands on the table every year — not because they're underqualified, but because they don't know what to say.</p>
-      <p>This tool gives you your target number, your opening line, and answers to every tricky question they might throw at you.</p>
+      <span class="welcome-icon">💸</span>
+      <h2>Your Rate Negotiation Coach</h2>
+      <p>Most freelancers leave money on the table every single project — not because they're not good enough, but because they don't know what to say when a client pushes back.</p>
+      <p>This tool gives you your ideal rate range, scripts for every awkward moment, and responses for every objection clients throw at you.</p>
     </div>
     <div class="steps-list">
-      <div class="step-item"><div class="step-icon">📋</div><div class="step-text"><strong>Step 1 — Your Situation</strong><span>Tell us about the job and your experience</span></div></div>
-      <div class="step-item"><div class="step-icon">💵</div><div class="step-text"><strong>Step 2 — The Numbers</strong><span>Current pay, their offer, what you actually want</span></div></div>
-      <div class="step-item"><div class="step-icon">🎯</div><div class="step-text"><strong>Step 3 — Your Strengths</strong><span>What makes you worth more</span></div></div>
-      <div class="step-item"><div class="step-icon">📜</div><div class="step-text"><strong>Step 4 — Your Scripts</strong><span>Exact words to say, ready to copy &amp; use</span></div></div>
+      <div class="step-item"><div class="step-icon">💼</div><div class="step-text"><strong>Step 1 — Your Situation</strong><span>New client, existing client, or raising your rates?</span></div></div>
+      <div class="step-item"><div class="step-icon">💵</div><div class="step-text"><strong>Step 2 — The Numbers</strong><span>Your current rate, what you want, your walk-away</span></div></div>
+      <div class="step-item"><div class="step-icon">🎯</div><div class="step-text"><strong>Step 3 — Your Value</strong><span>What makes you worth more than average</span></div></div>
+      <div class="step-item"><div class="step-icon">📜</div><div class="step-text"><strong>Step 4 — Your Scripts</strong><span>Exact words to use, ready to copy &amp; go</span></div></div>
     </div>
-    <button class="btn btn-primary" onclick="goTo(1)">Let's Build Your Strategy →</button>
-    <p class="footer-note">🔒 Everything stays on your phone. Nothing is sent anywhere.</p>
+    <button class="btn btn-primary" onclick="goTo(1)">Build My Rate Strategy →</button>
+    <p class="footer-note">🔒 Everything stays on your device. Nothing is sent anywhere.</p>
   </div>
 
   <!-- SCREEN 1: SITUATION -->
@@ -270,34 +255,52 @@
       <div class="section-num">1</div>
       <div class="section-title">Your Situation</div>
     </div>
-    <p class="section-sub">Tell us the basics so we can tailor your strategy.</p>
+    <p class="section-sub">Tell us what kind of negotiation you're heading into.</p>
+
     <div class="card">
       <label>Your name <span class="input-hint">(so scripts feel personal)</span></label>
       <input type="text" id="yourName" placeholder="e.g. Sarah" />
-      <label>What type of negotiation is this?</label>
+
+      <label>What situation are you negotiating?</label>
       <div class="chip-group">
-        <input type="radio" name="negType" id="nt1" value="new_job"><label for="nt1">🆕 New job offer</label>
-        <input type="radio" name="negType" id="nt2" value="raise" checked><label for="nt2">📈 Asking for a raise</label>
-        <input type="radio" name="negType" id="nt3" value="freelance"><label for="nt3">💼 Freelance / client rate</label>
-        <input type="radio" name="negType" id="nt4" value="promotion"><label for="nt4">🚀 Promotion</label>
+        <input type="radio" name="negType" id="nt1" value="new_client" checked>
+        <label for="nt1">🆕 New client, quoting my rate</label>
+        <input type="radio" name="negType" id="nt2" value="raise_rate">
+        <label for="nt2">📈 Raising rates with existing client</label>
+        <input type="radio" name="negType" id="nt3" value="pushback">
+        <label for="nt3">😬 Client pushed back on my quote</label>
+        <input type="radio" name="negType" id="nt4" value="scope_creep">
+        <label for="nt4">📋 Client adding work beyond scope</label>
       </div>
-      <label>Your industry / field</label>
-      <input type="text" id="industry" placeholder="e.g. Marketing, Software, Healthcare..." />
-      <label>Years of relevant experience</label>
+
+      <label>Your freelance field</label>
+      <input type="text" id="field" placeholder="e.g. Graphic Design, Copywriting, Web Dev..." />
+
+      <label>Years of freelance experience</label>
       <div class="chip-group">
-        <input type="radio" name="expYears" id="ex0" value="0-2" checked><label for="ex0">0–2 yrs</label>
-        <input type="radio" name="expYears" id="ex1" value="3-5"><label for="ex1">3–5 yrs</label>
-        <input type="radio" name="expYears" id="ex2" value="6-10"><label for="ex2">6–10 yrs</label>
-        <input type="radio" name="expYears" id="ex3" value="10+"><label for="ex3">10+ yrs</label>
+        <input type="radio" name="expYears" id="ex0" value="less than 1" checked>
+        <label for="ex0">Just starting</label>
+        <input type="radio" name="expYears" id="ex1" value="1–2">
+        <label for="ex1">1–2 yrs</label>
+        <input type="radio" name="expYears" id="ex2" value="3–5">
+        <label for="ex2">3–5 yrs</label>
+        <input type="radio" name="expYears" id="ex3" value="5+">
+        <label for="ex3">5+ yrs</label>
       </div>
-      <label>How would you rate your market demand right now?</label>
+
+      <label>How in-demand are your skills right now?</label>
       <div class="chip-group">
-        <input type="radio" name="demand" id="d1" value="low"><label for="d1">😐 Low</label>
-        <input type="radio" name="demand" id="d2" value="medium" checked><label for="d2">🙂 Medium</label>
-        <input type="radio" name="demand" id="d3" value="high"><label for="d3">🔥 High</label>
-        <input type="radio" name="demand" id="d4" value="rare"><label for="d4">💎 My skills are rare</label>
+        <input type="radio" name="demand" id="d1" value="low">
+        <label for="d1">😐 Common skill</label>
+        <input type="radio" name="demand" id="d2" value="medium" checked>
+        <label for="d2">🙂 Decent demand</label>
+        <input type="radio" name="demand" id="d3" value="high">
+        <label for="d3">🔥 High demand</label>
+        <input type="radio" name="demand" id="d4" value="rare">
+        <label for="d4">💎 Hard to find</label>
       </div>
     </div>
+
     <button class="btn btn-primary" onclick="goTo(2)">Continue to Numbers →</button>
   </div>
 
@@ -307,69 +310,106 @@
       <div class="section-num">2</div>
       <div class="section-title">The Numbers</div>
     </div>
-    <p class="section-sub">Don't worry — these are just for calculating your strategy. Be honest with yourself here.</p>
+    <p class="section-sub">These stay private — they're just used to build your strategy.</p>
+
     <div class="card">
-      <label>💵 What are you currently earning? <span class="input-hint">(annual)</span></label>
-      <div class="input-prefix-wrap"><span class="input-prefix">$</span><input type="number" id="currentPay" placeholder="0 if this is your first job" /></div>
-      <label>🎯 Their offer / current offer on the table <span class="input-hint">(0 if none yet)</span></label>
-      <div class="input-prefix-wrap"><span class="input-prefix">$</span><input type="number" id="theirOffer" placeholder="0 if no offer yet" /></div>
-      <label>✨ What salary do you truly want? <span class="input-hint">(your dream number)</span></label>
-      <div class="input-prefix-wrap"><span class="input-prefix">$</span><input type="number" id="wantPay" placeholder="Be ambitious — this is private" /></div>
-      <label>⚠️ Your walk-away number <span class="input-hint">(minimum you'd accept)</span></label>
-      <div class="input-prefix-wrap"><span class="input-prefix">$</span><input type="number" id="walkAway" placeholder="Below this, you'd decline" /></div>
+      <label>💵 What do you currently charge? <span class="input-hint">(hourly or per project)</span></label>
+      <div class="input-prefix-wrap">
+        <span class="input-prefix">$</span>
+        <input type="number" id="currentRate" placeholder="e.g. 50 per hour or 500 per project" />
+      </div>
+
+      <label>Rate type</label>
+      <div class="chip-group">
+        <input type="radio" name="rateType" id="rt1" value="hourly" checked>
+        <label for="rt1">⏱ Hourly</label>
+        <input type="radio" name="rateType" id="rt2" value="per project">
+        <label for="rt2">📦 Per project</label>
+        <input type="radio" name="rateType" id="rt3" value="monthly retainer">
+        <label for="rt3">🔄 Monthly retainer</label>
+      </div>
+
+      <label>✨ What rate do you actually want? <span class="input-hint">(be ambitious)</span></label>
+      <div class="input-prefix-wrap">
+        <span class="input-prefix">$</span>
+        <input type="number" id="wantRate" placeholder="Your real goal" />
+      </div>
+
+      <label>⚠️ Your walk-away rate <span class="input-hint">(below this, you'd decline)</span></label>
+      <div class="input-prefix-wrap">
+        <span class="input-prefix">$</span>
+        <input type="number" id="walkAway" placeholder="Minimum you'd accept" />
+      </div>
+
+      <label id="offerLabel">💬 Did the client make a counter-offer? <span class="input-hint">(0 if not yet)</span></label>
+      <div class="input-prefix-wrap">
+        <span class="input-prefix">$</span>
+        <input type="number" id="clientOffer" placeholder="Their number (or 0)" />
+      </div>
     </div>
 
-    <!-- SALARY VISUALIZATION -->
-    <div class="salary-viz" id="salaryViz">
-      <div class="salary-viz-title">📊 Your Number Landscape</div>
-      <div class="salary-track" id="salaryTrack"></div>
-      <div class="salary-legend">
-        <div class="legend-item"><div class="legend-dot" style="background:var(--muted)"></div>Current</div>
-        <div class="legend-item" id="legend-offer" style="display:none"><div class="legend-dot" style="background:var(--amber)"></div>Their offer</div>
-        <div class="legend-item"><div class="legend-dot" style="background:var(--forest-light)"></div>Your goal</div>
+    <!-- RATE LANDSCAPE VIZ -->
+    <div class="rate-viz" id="rateViz">
+      <div class="rate-viz-title">📊 Your Rate Landscape</div>
+      <div class="rate-track" id="rateTrack"></div>
+      <div class="rate-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--muted)"></div>Current rate</div>
+        <div class="legend-item" id="legend-offer" style="display:none"><div class="legend-dot" style="background:var(--red)"></div>Their offer</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Your goal</div>
         <div class="legend-item"><div class="legend-dot" style="background:var(--forest)"></div>Open at (anchor)</div>
       </div>
     </div>
 
     <div class="tip-box">
       <strong>💡 Coach Tip</strong>
-      The "anchor" (the first number you say) sets the whole negotiation. We'll help you anchor high but not recklessly so.
+      Always anchor higher than your goal. Clients expect to negotiate down. If you start at your real number, you'll end up below it.
     </div>
-    <button class="btn btn-primary" onclick="goTo(3)">Continue to Strengths →</button>
+
+    <button class="btn btn-primary" onclick="goTo(3)">Continue to Your Value →</button>
     <button class="btn btn-secondary" onclick="goTo(1)">← Back</button>
   </div>
 
-  <!-- SCREEN 3: STRENGTHS -->
+  <!-- SCREEN 3: YOUR VALUE -->
   <div class="screen" id="screen-3">
     <div class="section-label">
       <div class="section-num">3</div>
-      <div class="section-title">Your Strengths</div>
+      <div class="section-title">Your Value</div>
     </div>
-    <p class="section-sub">This is ammunition. The more specific, the stronger your case.</p>
+    <p class="section-sub">This is your ammunition. Specific beats vague every time.</p>
+
     <div class="card">
-      <label>🏆 Your biggest recent win at work <span class="input-hint">(result, not just task)</span></label>
-      <textarea id="bigWin" placeholder="e.g. Grew email list by 40% in 3 months, saving $8,000 in ad spend..."></textarea>
-      <label>📊 A specific number that shows your value <span class="input-hint">(revenue, savings, time saved...)</span></label>
-      <input type="text" id="specificNum" placeholder="e.g. Managed $200K budget, reduced churn by 15%..." />
-      <label>🎓 What makes you different from other candidates?</label>
-      <textarea id="differentiator" placeholder="e.g. I have both the technical AND communication skills, I'm certified in X, I built Y from scratch..."></textarea>
-      <label>Do you have competing offers or other options?</label>
+      <label>🏆 Your strongest result for a client <span class="input-hint">(outcome, not just task)</span></label>
+      <textarea id="bigWin" placeholder="e.g. Redesigned a client's homepage — their conversion rate went from 1.2% to 3.8% in 6 weeks..."></textarea>
+
+      <label>📊 A specific number that proves your value</label>
+      <input type="text" id="specificNum" placeholder="e.g. Saved client 10 hrs/week, generated $40K in new leads..." />
+
+      <label>🎓 Why are you worth more than a cheaper alternative?</label>
+      <textarea id="differentiator" placeholder="e.g. I specialise in e-commerce brands, I've worked with 30+ clients, I deliver in half the time most designers do..."></textarea>
+
+      <label>Do you have other clients or work lined up?</label>
       <div class="chip-group">
-        <input type="radio" name="leverage" id="lev1" value="yes_offer"><label for="lev1">✅ Yes, another offer</label>
-        <input type="radio" name="leverage" id="lev2" value="yes_options" checked><label for="lev2">🟡 Interviewing elsewhere</label>
-        <input type="radio" name="leverage" id="lev3" value="no"><label for="lev3">❌ No other options</label>
+        <input type="radio" name="leverage" id="lev1" value="fully_booked">
+        <label for="lev1">🔥 Fully booked</label>
+        <input type="radio" name="leverage" id="lev2" value="other_leads" checked>
+        <label for="lev2">📬 Other leads in progress</label>
+        <input type="radio" name="leverage" id="lev3" value="available">
+        <label for="lev3">📭 Available right now</label>
       </div>
-      <label>How confident do you feel walking in?</label>
+
+      <label>How confident do you feel going into this?</label>
       <div class="slider-wrap">
         <div class="slider-val" id="confVal">5 / 10</div>
         <input type="range" id="confSlider" min="1" max="10" value="5" oninput="document.getElementById('confVal').textContent=this.value+' / 10'">
         <div class="slider-labels"><span>Nervous 😬</span><span>Fired up 🔥</span></div>
       </div>
     </div>
+
     <div class="tip-box">
       <strong>💡 Coach Tip</strong>
-      Negotiating is not rude. 85% of employers expect it. The ones who don't offer more when pushed — you just have to push.
+      Clients don't pay for your time — they pay for the outcome. Lead with results, not hours worked.
     </div>
+
     <button class="btn btn-primary" onclick="buildResults()">✨ Generate My Scripts →</button>
     <button class="btn btn-secondary" onclick="goTo(2)">← Back</button>
   </div>
@@ -377,178 +417,202 @@
   <!-- SCREEN 4: RESULTS -->
   <div class="screen" id="screen-4">
 
+    <!-- HERO -->
     <div class="result-hero">
-      <div class="result-hero-label">Your Target Ask</div>
-      <div class="result-range" id="resultRange">$85,000 – $92,000</div>
-      <p id="resultNote">Based on your situation and goals</p>
-      <div class="anchor-badge" id="anchorBadge">🎯 Open at: $92,000</div>
+      <div class="result-hero-label">Your Target Rate Range</div>
+      <div class="result-range" id="resultRange">—</div>
+      <p id="resultNote">Based on your goals and situation</p>
+      <div class="anchor-badge" id="anchorBadge">🎯 Open negotiations at: —</div>
     </div>
 
+    <!-- CONFIDENCE -->
     <div class="card">
-      <label style="margin-bottom:10px;">Your Negotiation Confidence Score</label>
+      <label style="margin-bottom:10px;">Your Negotiation Readiness</label>
       <div class="confidence-bar-wrap">
         <div class="confidence-label-row">
-          <span>Readiness</span>
-          <span class="conf-level" id="confLevelLabel">Strong</span>
+          <span>Confidence level</span>
+          <span class="conf-level" id="confLevelLabel">—</span>
         </div>
         <div class="confidence-bar"><div class="confidence-fill" id="confBarFill" style="width:0%"></div></div>
       </div>
       <p style="font-size:13px;color:var(--muted);line-height:1.6;" id="confMessage"></p>
     </div>
 
+    <!-- TABS -->
     <div class="tab-bar">
       <button class="tab-btn active" onclick="switchTab('scripts')">📜 Scripts</button>
       <button class="tab-btn" onclick="switchTab('objections')">💬 Objections</button>
       <button class="tab-btn" onclick="switchTab('checklist')">✅ Checklist</button>
-      <button class="tab-btn" onclick="switchTab('dos')">⚡ Do's &amp; Don'ts</button>
+      <button class="tab-btn" onclick="switchTab('dos')">⚡ Rules</button>
     </div>
 
     <!-- TAB: SCRIPTS -->
     <div class="tab-content active" id="tab-scripts">
+
       <div class="script-card">
-        <div class="scenario">🎬 Opening Line — Start the Conversation</div>
+        <div class="scenario">🎬 Opening — State Your Rate with Confidence</div>
         <div class="script-text" id="script-open" onclick="copyScript('script-open','toast-open')">Loading...</div>
         <div class="copy-hint">👆 Tap to copy</div>
         <div class="copied-toast" id="toast-open">✅ Copied!</div>
       </div>
+
       <div class="script-card">
-        <div class="scenario">💵 Stating Your Number — The Ask</div>
-        <div class="script-text" id="script-ask" onclick="copyScript('script-ask','toast-ask')">Loading...</div>
+        <div class="scenario">💵 Justifying Your Rate — Lead With Value</div>
+        <div class="script-text" id="script-value" onclick="copyScript('script-value','toast-value')">Loading...</div>
         <div class="copy-hint">👆 Tap to copy</div>
-        <div class="copied-toast" id="toast-ask">✅ Copied!</div>
+        <div class="copied-toast" id="toast-value">✅ Copied!</div>
       </div>
+
       <div class="script-card">
-        <div class="scenario">⏸️ When They Go Silent (Don't Fill the Silence!)</div>
+        <div class="scenario">⏸️ After Stating Your Rate — Stay Silent</div>
         <div class="script-text" id="script-silence" onclick="copyScript('script-silence','toast-silence')">Loading...</div>
         <div class="copy-hint">👆 Tap to copy</div>
         <div class="copied-toast" id="toast-silence">✅ Copied!</div>
       </div>
+
       <div class="script-card">
-        <div class="scenario">✅ When They Say Yes</div>
+        <div class="scenario">✅ When They Agree</div>
         <div class="script-text" id="script-yes" onclick="copyScript('script-yes','toast-yes')">Loading...</div>
         <div class="copy-hint">👆 Tap to copy</div>
         <div class="copied-toast" id="toast-yes">✅ Copied!</div>
       </div>
+
       <div class="script-card">
         <div class="scenario">🚶 Your Walk-Away Line</div>
         <div class="script-text" id="script-walk" onclick="copyScript('script-walk','toast-walk')">Loading...</div>
         <div class="copy-hint">👆 Tap to copy</div>
         <div class="copied-toast" id="toast-walk">✅ Copied!</div>
       </div>
+
+      <div class="script-card">
+        <div class="scenario" id="situationScriptLabel">📈 Situation-Specific Script</div>
+        <div class="script-text" id="script-situation" onclick="copyScript('script-situation','toast-situation')">Loading...</div>
+        <div class="copy-hint">👆 Tap to copy</div>
+        <div class="copied-toast" id="toast-situation">✅ Copied!</div>
+      </div>
+
     </div>
 
     <!-- TAB: OBJECTIONS -->
     <div class="tab-content" id="tab-objections">
+
       <div class="tip-box">
         <strong>💡 How to use these</strong>
-        When they push back, don't panic. Use these responses word-for-word or close to it. Tap any answer to copy it.
+        When a client pushes back, don't panic and don't lower your rate immediately. Use these word-for-word. Tap any response to copy it.
       </div>
+
       <div class="objection-block">
-        <div class="objection-q">❓ "We don't have budget for that."</div>
+        <div class="objection-q">❓ "That's more than we budgeted for."</div>
         <div class="objection-a" id="obj1" onclick="copyScript('obj1','toast-obj1')">Loading...</div>
         <div class="copied-toast" id="toast-obj1">✅ Copied!</div>
       </div>
+
       <div class="objection-block">
-        <div class="objection-q">❓ "That's above our pay band."</div>
+        <div class="objection-q">❓ "We found someone cheaper."</div>
         <div class="objection-a" id="obj2" onclick="copyScript('obj2','toast-obj2')">Loading...</div>
         <div class="copied-toast" id="toast-obj2">✅ Copied!</div>
       </div>
+
       <div class="objection-block">
-        <div class="objection-q">❓ "What are you making now?"</div>
+        <div class="objection-q">❓ "Can you do it for [lower number]?"</div>
         <div class="objection-a" id="obj3" onclick="copyScript('obj3','toast-obj3')">Loading...</div>
         <div class="copied-toast" id="toast-obj3">✅ Copied!</div>
       </div>
+
       <div class="objection-block">
-        <div class="objection-q">❓ "Can you be flexible on that number?"</div>
+        <div class="objection-q">❓ "We're a small business / startup — can you give us a deal?"</div>
         <div class="objection-a" id="obj4" onclick="copyScript('obj4','toast-obj4')">Loading...</div>
         <div class="copied-toast" id="toast-obj4">✅ Copied!</div>
       </div>
+
       <div class="objection-block">
-        <div class="objection-q">❓ "We need to think about it."</div>
+        <div class="objection-q">❓ "We'll give you exposure / future work instead."</div>
         <div class="objection-a" id="obj5" onclick="copyScript('obj5','toast-obj5')">Loading...</div>
         <div class="copied-toast" id="toast-obj5">✅ Copied!</div>
       </div>
+
       <div class="objection-block">
-        <div class="objection-q">❓ "We were thinking more like [lower number]."</div>
+        <div class="objection-q">❓ "Can you do a test project first to see if we're a good fit?"</div>
         <div class="objection-a" id="obj6" onclick="copyScript('obj6','toast-obj6')">Loading...</div>
         <div class="copied-toast" id="toast-obj6">✅ Copied!</div>
       </div>
+
     </div>
 
     <!-- TAB: CHECKLIST -->
     <div class="tab-content" id="tab-checklist">
       <div class="card">
-        <div style="font-weight:700;color:var(--forest);margin-bottom:14px;font-size:15px;font-family:'Plus Jakarta Sans',sans-serif;">✅ Before You Walk In</div>
-        <div class="checklist-item"><div class="check-icon">✓</div>I know my target range and opening number</div>
-        <div class="checklist-item"><div class="check-icon">✓</div>I have 2–3 specific wins / results ready to mention</div>
-        <div class="checklist-item"><div class="check-icon">✓</div>I've researched market rates on Glassdoor or LinkedIn</div>
-        <div class="checklist-item"><div class="check-icon">✓</div>I know my walk-away number and I'm okay with it</div>
-        <div class="checklist-item"><div class="check-icon">✓</div>I've practiced saying my number out loud (seriously, do this)</div>
-        <div class="checklist-item"><div class="check-icon">✓</div>I'm ready to be silent after I state my ask</div>
-        <div class="checklist-item"><div class="check-icon">✓</div>I have the objection responses ready</div>
+        <div style="font-weight:700;color:var(--forest);margin-bottom:14px;font-size:15px;font-family:'Plus Jakarta Sans',sans-serif;">✅ Before the Conversation</div>
+        <div class="checklist-item"><div class="check-icon">✅</div>I know my anchor rate and I'm ready to say it out loud</div>
+        <div class="checklist-item"><div class="check-icon">✅</div>I have 1–2 specific results ready to back up my rate</div>
+        <div class="checklist-item"><div class="check-icon">✅</div>I know my walk-away number — and I'm willing to use it</div>
+        <div class="checklist-item"><div class="check-icon">✅</div>I've practiced saying my rate without apologising or trailing off</div>
+        <div class="checklist-item"><div class="check-icon">✅</div>I'm prepared to be silent after I state my rate</div>
       </div>
       <div class="card">
-        <div style="font-weight:700;color:var(--forest);margin-bottom:14px;font-size:15px;font-family:'Plus Jakarta Sans',sans-serif;">🎯 During the Negotiation</div>
-        <div class="checklist-item"><div class="check-icon">✓</div>Let them speak first if possible</div>
-        <div class="checklist-item"><div class="check-icon">✓</div>Never give a range first (they'll pick the bottom)</div>
-        <div class="checklist-item"><div class="check-icon">✓</div>Anchor HIGH — you can always come down, never go up</div>
-        <div class="checklist-item"><div class="check-icon">✓</div>After naming your number: STOP TALKING</div>
-        <div class="checklist-item"><div class="check-icon">✓</div>If they push back: "I understand — can you help me understand the constraints?"</div>
-        <div class="checklist-item"><div class="check-icon">✓</div>Negotiate benefits if salary is truly stuck (PTO, remote, title)</div>
-        <div class="checklist-item"><div class="check-icon">✓</div>Get any final offer in writing before you celebrate</div>
+        <div style="font-weight:700;color:var(--forest);margin-bottom:14px;font-size:15px;font-family:'Plus Jakarta Sans',sans-serif;">🎯 During the Conversation</div>
+        <div class="checklist-item"><div class="check-icon">✅</div>Lead with value, not time — talk outcomes, not hours</div>
+        <div class="checklist-item"><div class="check-icon">✅</div>State your rate clearly — no "around" or "roughly"</div>
+        <div class="checklist-item"><div class="check-icon">✅</div>After saying your rate: stop talking. Let them respond first.</div>
+        <div class="checklist-item"><div class="check-icon">✅</div>If they push back: ask questions before conceding anything</div>
+        <div class="checklist-item"><div class="check-icon">✅</div>If you must move: reduce scope, don't slash your rate</div>
+        <div class="checklist-item"><div class="check-icon">✅</div>Get the agreed rate in writing before starting any work</div>
       </div>
     </div>
 
-    <!-- TAB: DOS & DON'TS -->
+    <!-- TAB: RULES -->
     <div class="tab-content" id="tab-dos">
+
       <div class="accordion open" id="acc-dos">
         <div class="accordion-header" onclick="toggleAccordion('acc-dos')">
-          <div class="accordion-header-left" style="color:var(--green);">✅ DO These Things</div>
+          <div class="accordion-header-left" style="color:var(--green);">✅ Things That Work</div>
           <div class="accordion-arrow">▼</div>
         </div>
         <div class="accordion-body">
           <div class="accordion-inner">
-            <div class="checklist-item"><div class="check-icon" style="color:var(--green);">✓</div>Express excitement about the role first, then negotiate</div>
-            <div class="checklist-item"><div class="check-icon" style="color:var(--green);">✓</div>Use specific numbers — "87,500" sounds more researched than "around 90k"</div>
-            <div class="checklist-item"><div class="check-icon" style="color:var(--green);">✓</div>Ask for 24–48 hours to consider a verbal offer</div>
-            <div class="checklist-item"><div class="check-icon" style="color:var(--green);">✓</div>Mention competing offers if you have them (early and confidently)</div>
-            <div class="checklist-item"><div class="check-icon" style="color:var(--green);">✓</div>Negotiate benefits — vacation, remote days, start date, signing bonus</div>
-            <div class="checklist-item"><div class="check-icon" style="color:var(--green);">✓</div>Send a follow-up email summarizing what was agreed</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--green);">✓</div>Name a specific number — "$1,200" lands better than "around $1,000–1,500"</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--green);">✓</div>Anchor above your goal — you can always come down, never go up</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--green);">✓</div>Ask for time to review — "Let me send you a formal quote by tomorrow"</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--green);">✓</div>Reduce scope instead of rate — protect your hourly value</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--green);">✓</div>Mention you have limited availability — scarcity is real leverage</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--green);">✓</div>Always send a contract before starting — no exceptions</div>
           </div>
         </div>
       </div>
+
       <div class="accordion" id="acc-donts">
         <div class="accordion-header" onclick="toggleAccordion('acc-donts')">
-          <div class="accordion-header-left" style="color:var(--red);">🚫 DON'T Do These</div>
+          <div class="accordion-header-left" style="color:var(--red);">🚫 Things That Hurt You</div>
           <div class="accordion-arrow">▼</div>
         </div>
         <div class="accordion-body">
           <div class="accordion-inner">
-            <div class="checklist-item"><div class="check-icon" style="color:var(--red);">✗</div>Say "I need this because of my bills / personal situation"</div>
-            <div class="checklist-item"><div class="check-icon" style="color:var(--red);">✗</div>Apologize for asking — "Sorry, but could I ask for..."</div>
-            <div class="checklist-item"><div class="check-icon" style="color:var(--red);">✗</div>Give a range when asked for a number (they pick the bottom)</div>
-            <div class="checklist-item"><div class="check-icon" style="color:var(--red);">✗</div>Accept on the spot — always ask for time to review</div>
-            <div class="checklist-item"><div class="check-icon" style="color:var(--red);">✗</div>Reveal your current salary if you're in a state where they can't ask</div>
-            <div class="checklist-item"><div class="check-icon" style="color:var(--red);">✗</div>Threaten to leave unless you are truly ready to walk</div>
-            <div class="checklist-item"><div class="check-icon" style="color:var(--red);">✗</div>Fill silence — say your number, then wait, even if it feels awkward</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--red);">✗</div>Apologising for your rate — "Sorry, I know it's a lot, but..."</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--red);">✗</div>Giving a range — they will always pick the bottom number</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--red);">✗</div>Dropping your rate the moment they hesitate — wait for an actual counter</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--red);">✗</div>Justifying your rate with your expenses or personal costs</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--red);">✗</div>Working without a deposit — even for "quick" jobs</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--red);">✗</div>Agreeing to extra work without agreeing to extra pay first</div>
           </div>
         </div>
       </div>
+
       <div class="accordion" id="acc-mindset">
         <div class="accordion-header" onclick="toggleAccordion('acc-mindset')">
-          <div class="accordion-header-left" style="color:var(--amber-dk);">🧠 The Right Mindset</div>
+          <div class="accordion-header-left" style="color:var(--amber-dk);">🧠 The Mindset Shift</div>
           <div class="accordion-arrow">▼</div>
         </div>
         <div class="accordion-body">
           <div class="accordion-inner">
-            <div class="checklist-item"><div class="check-icon" style="color:var(--amber);">★</div>You are not asking for a favour. You are negotiating a business deal.</div>
-            <div class="checklist-item"><div class="check-icon" style="color:var(--amber);">★</div>The discomfort you feel lasts 30 seconds. Underpaying yourself lasts years.</div>
-            <div class="checklist-item"><div class="check-icon" style="color:var(--amber);">★</div>85% of employers expect you to negotiate. Most are relieved when you do — it signals confidence.</div>
-            <div class="checklist-item"><div class="check-icon" style="color:var(--amber);">★</div>The worst outcome is "no" — which puts you exactly where you started.</div>
-            <div class="checklist-item"><div class="check-icon" style="color:var(--amber);">★</div>Practice your number out loud before you walk in. Say it until it sounds normal.</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--amber);">★</div>You are not asking for a favour. This is a business transaction — act like it.</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--amber);">★</div>A client who fights your rate before you start will fight your invoices too.</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--amber);">★</div>Cheap clients take the most time and cause the most stress. Raise your rates, get better clients.</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--amber);">★</div>The discomfort of asking lasts 30 seconds. Undercharging lasts the entire project.</div>
+            <div class="checklist-item"><div class="check-icon" style="color:var(--amber);">★</div>If they walk away over your rate, they were never going to be a good client anyway.</div>
           </div>
         </div>
       </div>
+
     </div>
 
     <div class="divider">or</div>
@@ -557,7 +621,7 @@
 
   </div>
 
-</div>
+</div><!-- /container -->
 
 <script>
 let currentScreen = 0;
@@ -567,143 +631,186 @@ function goTo(n) {
   document.getElementById('screen-' + currentScreen).classList.remove('active');
   document.getElementById('screen-' + n).classList.add('active');
   currentScreen = n;
-  updateProgress(n);
-  window.scrollTo({top:0, behavior:'smooth'});
-  saveData();
-}
-
-function updateProgress(n) {
   const pct = Math.round((n / TOTAL_STEPS) * 100);
   document.getElementById('progressFill').style.width = pct + '%';
   document.getElementById('progressText').textContent = n === 0 ? 'Intro' : 'Step ' + n + ' of ' + (TOTAL_STEPS - 1);
   document.getElementById('progressPct').textContent = pct + '%';
+  window.scrollTo({top:0, behavior:'smooth'});
+  saveData();
 }
 
 function buildResults() {
   const name       = document.getElementById('yourName').value.trim() || 'you';
-  const negType    = document.querySelector('input[name="negType"]:checked')?.value || 'raise';
-  const experience = document.querySelector('input[name="expYears"]:checked')?.value || '3-5';
+  const negType    = document.querySelector('input[name="negType"]:checked')?.value || 'new_client';
+  const experience = document.querySelector('input[name="expYears"]:checked')?.value || '1–2';
   const demand     = document.querySelector('input[name="demand"]:checked')?.value || 'medium';
-  const current    = parseFloat(document.getElementById('currentPay').value) || 0;
-  const offer      = parseFloat(document.getElementById('theirOffer').value) || 0;
-  const want       = parseFloat(document.getElementById('wantPay').value) || 0;
+  const rateType   = document.querySelector('input[name="rateType"]:checked')?.value || 'hourly';
+  const current    = parseFloat(document.getElementById('currentRate').value) || 0;
+  const want       = parseFloat(document.getElementById('wantRate').value) || 0;
   const walkAway   = parseFloat(document.getElementById('walkAway').value) || 0;
+  const clientOffer= parseFloat(document.getElementById('clientOffer').value) || 0;
   const bigWin     = document.getElementById('bigWin').value.trim();
   const specNum    = document.getElementById('specificNum').value.trim();
-  const leverage   = document.querySelector('input[name="leverage"]:checked')?.value || 'yes_options';
+  const leverage   = document.querySelector('input[name="leverage"]:checked')?.value || 'other_leads';
   const confSlider = parseInt(document.getElementById('confSlider').value) || 5;
+  const field      = document.getElementById('field').value.trim() || 'your field';
 
-  const base   = want > 0 ? want : (offer > 0 ? offer * 1.15 : current * 1.2);
-  const anchor = Math.round(base * 1.08 / 1000) * 1000;
-  const low    = Math.round(base / 1000) * 1000;
-  const fmt    = n => '$' + n.toLocaleString('en-US');
+  // Calculate anchor
+  const base   = want > 0 ? want : (current > 0 ? current * 1.25 : 100);
+  const anchor = Math.round(base * 1.12);
+  const low    = Math.round(base);
+  const sym    = '$';
+  const fmt    = n => sym + n.toLocaleString('en-US');
+  const unit   = rateType === 'hourly' ? '/hr' : rateType === 'monthly retainer' ? '/mo' : '';
 
-  document.getElementById('resultRange').textContent = fmt(low) + ' – ' + fmt(anchor);
-  document.getElementById('anchorBadge').textContent = '🎯 Open at: ' + fmt(anchor);
+  document.getElementById('resultRange').textContent = fmt(low) + unit + ' – ' + fmt(anchor) + unit;
+  document.getElementById('anchorBadge').textContent = '🎯 Open at: ' + fmt(anchor) + unit;
 
-  let noteText = 'Based on your goals';
-  if (offer > 0 && anchor > offer) noteText = 'That\'s ' + fmt(anchor - offer) + ' more than their offer';
-  else if (offer > 0) noteText = 'You\'re in a strong position already';
+  let noteText = 'Based on your goals and experience';
+  if (clientOffer > 0 && anchor > clientOffer) noteText = 'That\'s ' + fmt(anchor - clientOffer) + unit + ' above their offer — room to land in the middle';
+  else if (current > 0 && want > current) noteText = 'That\'s a ' + Math.round(((want - current) / current) * 100) + '% increase on your current rate';
   document.getElementById('resultNote').textContent = noteText;
 
+  // Confidence score
   let confScore = confSlider * 6;
-  if (leverage === 'yes_offer') confScore = Math.min(100, confScore + 20);
-  if (leverage === 'yes_options') confScore = Math.min(100, confScore + 10);
+  if (leverage === 'fully_booked') confScore = Math.min(100, confScore + 20);
+  if (leverage === 'other_leads')  confScore = Math.min(100, confScore + 10);
   if (demand === 'high' || demand === 'rare') confScore = Math.min(100, confScore + 15);
   if (bigWin.length > 20) confScore = Math.min(100, confScore + 10);
   confScore = Math.max(30, Math.min(95, confScore));
-
   setTimeout(() => { document.getElementById('confBarFill').style.width = confScore + '%'; }, 300);
-
   const confLabel = confScore >= 75 ? 'Strong 💪' : confScore >= 50 ? 'Building 📈' : 'Growing 🌱';
   document.getElementById('confLevelLabel').textContent = confLabel;
   document.getElementById('confMessage').textContent = confScore >= 75
-    ? 'You have real leverage here. Walk in with your head high — your value is clear.'
+    ? 'You have real leverage. Walk in with your head high — your value is clear.'
     : confScore >= 50
-    ? 'You have a solid case. Remember: the worst they can say is no, and that changes nothing.'
-    : 'Everyone starts here. Having a script removes the pressure — you just follow it.';
+    ? 'You have a solid case. The worst they can say is no, and that puts you exactly where you started.'
+    : 'Everyone feels this way at first. Having a script removes the pressure — just follow it.';
 
-  const firstName = name.charAt(0).toUpperCase() + name.slice(1);
-  const winSnippet = bigWin.length > 10 ? bigWin.substring(0, 80) : 'the results I\'ve driven';
-  const numSnippet = specNum.length > 5 ? specNum : 'measurable impact';
-  const leverageStr = leverage === 'yes_offer' ? ' I do have another offer I\'m considering,' : leverage === 'yes_options' ? ' I\'m in conversations with a couple of other companies,' : '';
+  const winSnippet = bigWin.length > 10 ? bigWin.substring(0, 80) : 'results I consistently deliver';
+  const numSnippet = specNum.length > 5 ? specNum : 'measurable impact for clients';
+  const leverageStr = leverage === 'fully_booked' ? ' My schedule is currently full, so I\'m selective about new projects.' : leverage === 'other_leads' ? ' I\'m currently in conversations with a couple of other clients.' : '';
 
-  document.getElementById('script-open').innerHTML = `"I'm really excited about this opportunity — I can already see the impact I'd make. Before we finalize anything, I'd like to talk about compensation so we're aligned."`;
-  document.getElementById('script-ask').innerHTML  = `"Based on my ${experience} years of experience in the field, and results like ${winSnippet},${leverageStr} I'm targeting a salary of <strong>${fmt(anchor)}</strong>. I believe that reflects both the market rate and the value I bring."`;
-  document.getElementById('script-silence').innerHTML = `"I'm happy to give you a moment to think about that." <em>[Then stop talking. Count to 20 in your head if you need to. The first person to speak after naming a number loses leverage.]</em>`;
-  document.getElementById('script-yes').innerHTML  = `"Thank you — I'm really glad we could land there. I'm excited to bring my best to this. Could we get that in writing so we're both on the same page? And is there flexibility on [benefits / start date / review timeline]?"`;
+  // Situation-specific script
+  const situationScripts = {
+    new_client: {
+      label: '🆕 Quoting a New Client',
+      text:  `"Based on the scope of this project and my ${experience} years of experience in ${field}, my rate is <strong>${fmt(anchor)}${unit}</strong>.${leverageStr} That reflects the quality and turnaround time I consistently deliver."`
+    },
+    raise_rate: {
+      label: '📈 Raising Rates With Existing Client',
+      text:  `"I really enjoy working together, and I want to continue doing so. I'm updating my rates to <strong>${fmt(anchor)}${unit}</strong> starting next month — this reflects my current experience level and market rates. I wanted to give you plenty of notice and I'm happy to honour the old rate for any work we agree on before then."`
+    },
+    pushback: {
+      label: '😬 Responding to Rate Pushback',
+      text:  `"I understand you're working within a budget — that's completely fair. My rate of <strong>${fmt(low)}${unit}</strong> reflects ${numSnippet}. If the budget is firm, I can look at reducing the scope so we can get started at a number that works for both of us. What's most important to you in this project?"`
+    },
+    scope_creep: {
+      label: '📋 Handling Out-of-Scope Requests',
+      text:  `"Happy to help with that — it sits outside what we originally agreed on, so I'd add it as a separate line item at <strong>${fmt(anchor)}${unit}</strong>. Want me to send a quick addendum to the contract so we're both covered?"`
+    }
+  };
+
+  const sit = situationScripts[negType] || situationScripts.new_client;
+  document.getElementById('situationScriptLabel').textContent = sit.label;
+  document.getElementById('script-situation').innerHTML = sit.text;
+
+  // Core scripts
+  document.getElementById('script-open').innerHTML =
+    `"My rate for this project is <strong>${fmt(anchor)}${unit}</strong>." <em>[Then stop talking. Let them respond first.]</em>`;
+
+  document.getElementById('script-value').innerHTML =
+    `"The reason I charge ${fmt(anchor)}${unit} is because I don't just deliver the work — I deliver results. For example, ${winSnippet}. That kind of outcome is what you're investing in."`;
+
+  document.getElementById('script-silence').innerHTML =
+    `<em>[After stating your rate, go quiet. This is the most powerful thing you can do. The first person to speak loses leverage. Count to 20 in your head if you need to. Let them fill the silence.]</em>`;
+
+  document.getElementById('script-yes').innerHTML =
+    `"Great — I'm glad we could align on that. I'll send over the contract and invoice for the deposit today so we can get started. Looking forward to it."`;
+
   document.getElementById('script-walk').innerHTML = walkAway > 0
-    ? `"I really appreciate the offer and everything we've discussed. At ${fmt(walkAway)}, I'm not able to make it work — that's my minimum to make this transition make sense. If there's any way to get closer to ${fmt(low)}, I'm very motivated to say yes today."`
-    : `"I appreciate the offer. I need it to be closer to ${fmt(low)} to make this the right move for me. Is there any flexibility there?"`;
+    ? `"I appreciate your time and I'd genuinely love to work together. Unfortunately, at that rate I wouldn't be able to give this project the attention it deserves — my minimum for this scope is <strong>${fmt(walkAway)}${unit}</strong>. If that's not possible, I completely understand, and I'm happy to recommend someone who might be a better fit for your budget."`
+    : `"I appreciate you sharing that. I'm not able to go lower than <strong>${fmt(low)}${unit}</strong> for this scope — that's where I need to be to deliver the quality you're expecting. Is there flexibility on your end, or would you like to look at adjusting the scope instead?"`;
 
-  document.getElementById('obj1').innerHTML = `"I completely understand budget constraints — believe me, I've worked within them too. What I'd love to explore is whether there's flexibility in other ways: a 90-day review for a raise, a signing bonus, or additional PTO. What options do we have?"`;
-  document.getElementById('obj2').innerHTML = `"I appreciate you sharing that context. My research on the market rate for someone with my background and ${numSnippet} suggests ${fmt(anchor)} is competitive. Is the band something that can be revisited, or is there a pathway to adjust it?"`;
-  document.getElementById('obj3').innerHTML = `"I'd prefer to focus on the value I bring to this role rather than what I've been paid before. Based on the scope of this position and market data, I'm targeting ${fmt(anchor)}. Does that work for the team?"`;
-  document.getElementById('obj4').innerHTML = `"I've done my homework on this and I feel ${fmt(anchor)} is a fair number for what I bring. That said, I'm open to creative solutions — could we look at a performance-based review in 6 months, or are there other elements of the package we could adjust?"`;
-  document.getElementById('obj5').innerHTML = `"Of course, take the time you need. Just so I can plan accordingly, when do you think you'll have a decision? And is there anything else you need from me in the meantime?"`;
-  document.getElementById('obj6').innerHTML = `"I appreciate you sharing that. I've given ${fmt(anchor)} serious thought based on my experience and what I can deliver. Could we meet somewhere in between — like ${fmt(Math.round((anchor + (offer || low)) / 2 / 1000) * 1000)}? That feels fair to both of us."`;
+  // Objection responses
+  document.getElementById('obj1').innerHTML =
+    `"I hear you — budgets are real. What's your budget looking like? If it's close, we might be able to adjust the scope slightly so you get the highest-impact parts of the work within what you have. What matters most to you in this project?"`;
+
+  document.getElementById('obj2').innerHTML =
+    `"I understand — there are cheaper options out there. The question is what you're optimising for. Someone at a lower rate might be great, but if they need more of your time, deliver slower, or need revisions, the real cost often ends up higher. My rate reflects the quality and the speed I can deliver it at."`;
+
+  document.getElementById('obj3').innerHTML = clientOffer > 0
+    ? `"I appreciate you sharing that. I can come down to <strong>${fmt(Math.round((anchor + clientOffer) / 2))}${unit}</strong> — that's as far as I can go while still giving this project the full attention it deserves. Does that work for you?"`
+    : `"I'm not able to go to that number for the full scope — but I could reduce the deliverables to fit that budget. Which parts of the project are most important to you, and we can go from there?"`;
+
+  document.getElementById('obj4').innerHTML =
+    `"I do keep a small number of spots for early-stage businesses — but my rate stays the same. What I can do is structure the payment differently: split it across two or three milestones so it's lighter on your cash flow. Would that help?"`;
+
+  document.getElementById('obj5').innerHTML =
+    `"I appreciate the thought, but exposure doesn't pay my bills — and it's hard to put a value on. I'd love to work with you, but it would need to be at my standard rate. If budget is the barrier, let's see what we can do with scope instead."`;
+
+  document.getElementById('obj6').innerHTML =
+    `"I understand where you're coming from — but working for free before a contract puts both of us in an awkward position. What I can offer is a clearly scoped, paid first phase at a reduced size — that gives you a real look at my work with zero commitment to a larger project. Would that work?"`;
+
+  // Update rate landscape viz
+  updateRateViz();
 
   goTo(4);
 }
 
-function toggleAccordion(id) { document.getElementById(id).classList.toggle('open'); }
+function updateRateViz() {
+  const current     = parseFloat(document.getElementById('currentRate').value) || 0;
+  const want        = parseFloat(document.getElementById('wantRate').value) || 0;
+  const clientOffer = parseFloat(document.getElementById('clientOffer').value) || 0;
 
-function updateSalaryViz() {
-  const current  = parseFloat(document.getElementById('currentPay').value) || 0;
-  const offer    = parseFloat(document.getElementById('theirOffer').value) || 0;
-  const want     = parseFloat(document.getElementById('wantPay').value) || 0;
-
-  const hasEnough = (current > 0 || offer > 0) && (want > 0);
-  const viz = document.getElementById('salaryViz');
+  const hasEnough = want > 0;
+  const viz = document.getElementById('rateViz');
   if (!hasEnough) { viz.classList.remove('visible'); return; }
   viz.classList.add('visible');
 
-  const base   = want > 0 ? want : (offer > 0 ? offer * 1.15 : current * 1.2);
-  const anchor = Math.round(base * 1.08 / 1000) * 1000;
+  const base   = want;
+  const anchor = Math.round(base * 1.12);
 
   const points = [];
-  if (current > 0) points.push({val:current, key:'current'});
-  if (offer   > 0) points.push({val:offer,   key:'offer'});
-  if (want    > 0) points.push({val:want,     key:'target'});
-  if (anchor  > 0) points.push({val:anchor,   key:'ask'});
+  if (current     > 0) points.push({val:current,     key:'current', color:'var(--muted)',        label:'Current'});
+  if (clientOffer > 0) points.push({val:clientOffer, key:'offer',   color:'var(--red)',          label:'Their offer'});
+  if (want        > 0) points.push({val:want,         key:'target',  color:'var(--green)',        label:'Your goal'});
+  if (anchor      > 0) points.push({val:anchor,       key:'ask',     color:'var(--forest)',       label:'Anchor'});
   points.sort((a,b) => a.val - b.val);
 
   const min = points[0].val, max = points[points.length-1].val, range = max - min || 1;
-  const fmtK = n => '$' + Math.round(n/1000) + 'k';
-  const pct  = v => Math.max(2, Math.min(98, ((v-min)/range)*100));
+  const fmtK = n => n >= 1000 ? '$' + Math.round(n/1000) + 'k' : '$' + n;
+  const pct  = v => Math.max(4, Math.min(96, ((v-min)/range)*100));
 
-  const colors = { current:'var(--muted)', offer:'var(--amber)', target:'var(--forest-light)', ask:'var(--forest)' };
-  const labels = { current:'Current', offer:'Offer', target:'Goal', ask:'Ask' };
-
-  const track = document.getElementById('salaryTrack');
+  const track = document.getElementById('rateTrack');
   track.innerHTML = '';
 
-  const fillBar = document.createElement('div');
-  fillBar.className = 'salary-segment seg-ask';
-  fillBar.style.left = pct(points[0].val) + '%';
-  fillBar.style.width = (pct(points[points.length-1].val) - pct(points[0].val)) + '%';
-  fillBar.style.opacity = '0.25';
-  track.appendChild(fillBar);
+  const fill = document.createElement('div');
+  fill.className = 'rate-segment';
+  fill.style.left = pct(points[0].val) + '%';
+  fill.style.width = (pct(points[points.length-1].val) - pct(points[0].val)) + '%';
+  fill.style.background = 'var(--forest)';
+  track.appendChild(fill);
 
   points.forEach(p => {
     const dot = document.createElement('div');
-    dot.className = 'salary-dot';
+    dot.className = 'rate-dot';
     dot.style.left = pct(p.val) + '%';
-    dot.style.background = colors[p.key];
+    dot.style.background = p.color;
     track.appendChild(dot);
     const pin = document.createElement('div');
-    pin.className = 'salary-pin';
+    pin.className = 'rate-pin';
     pin.style.left = pct(p.val) + '%';
-    pin.style.color = colors[p.key];
-    pin.innerHTML = `<span style="font-size:9px;display:block;opacity:0.75;">${labels[p.key]}</span>${fmtK(p.val)}`;
+    pin.style.color = p.color;
+    pin.innerHTML = `<span style="font-size:9px;display:block;opacity:0.7;">${p.label}</span>${fmtK(p.val)}`;
     track.appendChild(pin);
   });
 
-  document.getElementById('legend-offer').style.display = offer > 0 ? 'flex' : 'none';
+  document.getElementById('legend-offer').style.display = clientOffer > 0 ? 'flex' : 'none';
 }
 
-['currentPay','theirOffer','wantPay','walkAway'].forEach(id => {
-  document.getElementById(id).addEventListener('input', updateSalaryViz);
+['currentRate','wantRate','walkAway','clientOffer'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateRateViz);
 });
 
 function switchTab(tabName) {
@@ -713,9 +820,10 @@ function switchTab(tabName) {
   event.target.classList.add('active');
 }
 
+function toggleAccordion(id) { document.getElementById(id).classList.toggle('open'); }
+
 function copyScript(elId, toastId) {
-  const el   = document.getElementById(elId);
-  const text = el.innerText || el.textContent;
+  const text = (document.getElementById(elId).innerText || '').trim();
   if (navigator.clipboard) { navigator.clipboard.writeText(text); }
   else {
     const ta = document.createElement('textarea');
@@ -729,28 +837,29 @@ function copyScript(elId, toastId) {
 }
 
 function saveData() {
-  const data = {
-    yourName: document.getElementById('yourName').value,
-    industry: document.getElementById('industry').value,
-    currentPay: document.getElementById('currentPay').value,
-    theirOffer: document.getElementById('theirOffer').value,
-    wantPay: document.getElementById('wantPay').value,
-    walkAway: document.getElementById('walkAway').value,
-    bigWin: document.getElementById('bigWin').value,
-    specificNum: document.getElementById('specificNum').value,
-    differentiator: document.getElementById('differentiator').value,
-    confSlider: document.getElementById('confSlider').value,
-  };
-  try { localStorage.setItem('negCoach_v2', JSON.stringify(data)); } catch(e){}
+  try {
+    localStorage.setItem('rateCoach_v1', JSON.stringify({
+      yourName: document.getElementById('yourName').value,
+      field:    document.getElementById('field').value,
+      currentRate: document.getElementById('currentRate').value,
+      wantRate:    document.getElementById('wantRate').value,
+      walkAway:    document.getElementById('walkAway').value,
+      clientOffer: document.getElementById('clientOffer').value,
+      bigWin:      document.getElementById('bigWin').value,
+      specificNum: document.getElementById('specificNum').value,
+      differentiator: document.getElementById('differentiator').value,
+      confSlider:  document.getElementById('confSlider').value,
+    }));
+  } catch(e){}
 }
 
 function loadData() {
   try {
-    const raw = localStorage.getItem('negCoach_v2');
+    const raw = localStorage.getItem('rateCoach_v1');
     if (!raw) return;
     const d = JSON.parse(raw);
-    const fields = ['yourName','industry','currentPay','theirOffer','wantPay','walkAway','bigWin','specificNum','differentiator'];
-    fields.forEach(f => { if (d[f]) document.getElementById(f).value = d[f]; });
+    const fields = ['yourName','field','currentRate','wantRate','walkAway','clientOffer','bigWin','specificNum','differentiator'];
+    fields.forEach(f => { if (d[f] && document.getElementById(f)) document.getElementById(f).value = d[f]; });
     if (d.confSlider) {
       document.getElementById('confSlider').value = d.confSlider;
       document.getElementById('confVal').textContent = d.confSlider + ' / 10';
@@ -759,7 +868,7 @@ function loadData() {
 }
 
 function resetAll() {
-  try { localStorage.removeItem('negCoach_v2'); } catch(e){}
+  try { localStorage.removeItem('rateCoach_v1'); } catch(e){}
   document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => el.value = '');
   document.getElementById('confSlider').value = 5;
   document.getElementById('confVal').textContent = '5 / 10';
@@ -768,7 +877,7 @@ function resetAll() {
 document.addEventListener('input', saveData);
 document.addEventListener('change', saveData);
 loadData();
-updateSalaryViz();
+updateRateViz();
 </script>
 </body>
 </html>
